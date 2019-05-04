@@ -487,29 +487,28 @@ height:50vh;
 <!-- City版安装代码已完成 -->
     
     
-<div id="container"></div>
-<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
-<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
-<script>
-    var gitment = new Gitment({
-        // id: "MAC下神器alfred的使用", // 可选。默认为 location.href
-        owner: 'kongpingfan',
-        repo: 'kongpingfan.github.io',
-        oauth: {
-            client_id: 'fe1d682221309cb76b6a',
-            client_secret: '8ab8a6b1fdd4d680430449e70f3b32c721aa342a',
-        },
-    })
-    gitment.render('container')
-
-</script>
-
     <!-- partial('_partial/comment/changyan') -->
     <!--PC版-->
 
 
     
     
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+    <div id="comment"></div>
+    <script>
+    new Valine({
+        el: '#comment' ,
+        notify:false, 
+        verify:false, 
+        appId: "yli83qQtD6rS989d0GX1v7jw-gzGzoHsz",
+        appKey: "LtCXhADf0xgufhrJvA6yU1BB",
+        placeholder: "我是练习时长两年半的评论框，喜欢唱、跳、rap、被评论～",
+        path:window.location.pathname, 
+        avatar:'mm' 
+    });
+    </script>
+
 
     <!-- 评论 -->
 </main>
@@ -625,6 +624,10 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
     
     
     
@@ -933,9 +936,9 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="tools"><span class="iconfont-archer">&#xe606;</span>tools</span>
     
-        <span class="sidebar-tag-name" data-tags="python 正则"><span class="iconfont-archer">&#xe606;</span>python 正则</span>
-    
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
+        <span class="sidebar-tag-name" data-tags="python 正则"><span class="iconfont-archer">&#xe606;</span>python 正则</span>
     
         <span class="sidebar-tag-name" data-tags="python"><span class="iconfont-archer">&#xe606;</span>python</span>
     
