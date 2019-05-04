@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="平凡">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="平凡">
+    
+    <meta name="keywords" content="kongpingfan,kongpingfan-blog,pingfan">
+    
+    <meta name="description" content>
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>python的装饰器 · Kongpingfan&#39;s Blog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script> -->
+
+
+    <!-- <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atelier-heath-light.min.css"> -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/vs2015.min.css">
+
+    <script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- 百度统计  -->
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?b4bccf94e7fc5c0889f3eb16e5147882";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">Pingfan&#39;s Blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">python的装饰器</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">Pingfan's Blog</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            python的装饰器
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class="post-intro-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="python">python</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">1.9k</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/10/01</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <blockquote>
+<p>翻译自：<br><a href="https://www.programiz.com/python-programming/decorator" target="_blank" rel="noopener">https://www.programiz.com/python-programming/decorator</a></p>
+</blockquote>
+<hr>
+<blockquote>
+<p>装饰器接收一个函数，为其加入一些功能并返回它。<br>它又叫作元类编程，因为一部分程序在运行时尝试修改另外一部分程序。</p>
+</blockquote>
+<p>简单说来，装饰器像一个包裹，不用更改这个函数自身，改变原函数代码的功能(增强了它原来的功能)。就像一包月饼卖10块钱，我们给它套上精致华丽骚气而浮夸的包装盒，瞬间能卖上千了有木有，但月饼还是原来的月饼，并没有任何改变。</p>
+<h1 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h1><p>我们必须习惯，在<code>python</code>中，任何东西都是对象。名字只是指向这些对象的一个标识。函数也不例外，它们也是带有属性的对象，不同的名字可以指向同一个函数对象。<br>下面是一个例子：</p>
+<pre><code>def first(msg):
+    print(msg)    
+
+first(&quot;Hello&quot;)
+
+second = first
+second(&quot;Hello&quot;)
+</code></pre><p>当你运行这段代码，<code>first</code> 和<code>second</code>的输出都是一样的。它们都指向了同一个函数对象。</p>
+<p>于是就出现了奇怪的东东。</p>
+<p>函数可以当作参数，传给另一个函数。</p>
+<p>如果在使用过<code>python</code>的<code>map, filter</code>，就应该理解这个（把lambda函数当作map的参数？？）。</p>
+<p>这些把其他函数当作参数的函数叫做<code>高阶函数（higher order functions）</code>。 下面是一个例子：</p>
+<pre><code>def inc(x):
+    return x + 1
+
+def dec(x):
+    return x - 1
+
+def operate(func, x):
+    result = func(x)
+    return result
+</code></pre><p>我们这样调用函数：</p>
+<pre><code>&gt;&gt;&gt; operate(inc,3)
+4
+&gt;&gt;&gt; operate(dec,3)
+2
+</code></pre><p>甚至，<strong>一个函数可以返回另一个函数：</strong></p>
+<pre><code>def is_called():
+    def is_returned():
+        print(&quot;Hello&quot;)
+    return is_returned
+
+new = is_called()
+
+#Outputs &quot;Hello&quot;
+new()
+</code></pre><p><code>is_returned()</code>是一个嵌套函数，每次我们调用<code>is_called</code>，都返回的是这个函数。</p>
+<p>这是python中的闭包机制。</p>
+<h1 id="装饰器"><a href="#装饰器" class="headerlink" title="装饰器"></a>装饰器</h1><pre><code>def make_pretty(func):
+    def inner():
+        print(&quot;I got decorated&quot;)
+        func()
+    return inner
+
+def ordinary():
+    print(&quot;I am ordinary&quot;)
+</code></pre><p>运行上面程序：</p>
+<pre><code>&gt;&gt;&gt; ordinary()
+I am ordinary
+
+&gt;&gt;&gt; # let&#39;s decorate this ordinary function
+&gt;&gt;&gt; pretty = make_pretty(ordinary)
+&gt;&gt;&gt; pretty()
+I got decorated
+I am ordinary
+</code></pre><p>上面例子中，<code>make_pretty()</code>是一个装饰器，<code>pretty = make_pretty(ordinary)</code>这行，<code>ordinary()</code>函数被装饰，并且将新的函数以名字<code>pretty</code>返回。</p>
+<p>可以看到，装饰器为原来的函数添加了新的功能。这就像为礼物套上包装一样。对象的表面看起来像是改变了，但里面的干货都没变，而且变得好看了。</p>
+<p>我们可以使用<code>@</code>符号来装饰，它下面的函数是<strong>被装饰的函数</strong>，@后面跟的是<strong>装饰函数</strong>，例如：</p>
+<pre><code>@make_pretty
+def ordinary():
+    print(&quot;I am ordinary&quot;)
+</code></pre><p>它等价于：</p>
+<pre><code>def ordinary():
+    print(&quot;I am ordinary&quot;)
+ordinary = make_pretty(ordinary)
+</code></pre><p>使用<code>@</code>形式，本质上是语法糖。</p>
+<h1 id="装饰带有参数的函数"><a href="#装饰带有参数的函数" class="headerlink" title="装饰带有参数的函数"></a>装饰带有参数的函数</h1><p>上面的装饰器非常简单，因为它装饰的是<strong>没有任何参数的函数</strong>。如果是带有参数的函数，例如下面这样：</p>
+<pre><code>def divide(a, b):
+    return a/b
+</code></pre><p>上面的函数有两个参数，如果将<code>b</code>设置为0，会报错。</p>
+<pre><code>&gt;&gt;&gt; divide(2,5)
+0.4
+&gt;&gt;&gt; divide(2,0)
+Traceback (most recent call last):
+...
+ZeroDivisionError: division by zero
+</code></pre><p>现在我们做一个装饰器，来检查错误</p>
+<pre><code>def smart_divide(func):
+   def inner(a,b):
+      print(&quot;I am going to divide&quot;,a,&quot;and&quot;,b)
+      if b == 0:
+         print(&quot;Whoops! cannot divide&quot;)
+         return
+
+      return func(a,b)
+   return inner
+
+@smart_divide
+def divide(a,b):
+    return a/b
+</code></pre><p>如果传入<code>b=0</code>，将会返回None。</p>
+<pre><code>&gt;&gt;&gt; divide(2,5)
+I am going to divide 2 and 5
+0.4
+
+&gt;&gt;&gt; divide(2,0)
+I am going to divide 2 and 0
+Whoops! cannot divide
+</code></pre><p>使用这种方式，可以装饰带参数的函数。</p>
+<p>如果你眼尖，会发现装饰器中的<code>inner(a,b)</code>与原函数<code>divide(a,b)</code>参数是对应的。所以，我们可以让装饰器匹配任意数量的参数。</p>
+<p>在python中，可以用<code>function(*args, **kwargs)</code>来解决这个问题。例如：</p>
+<pre><code>def works_for_all(func):
+    def inner(*args, **kwargs):
+        print(&quot;I can decorate any function&quot;)
+        return func(*args, **kwargs)
+    return inner
+</code></pre><h1 id="装饰器链"><a href="#装饰器链" class="headerlink" title="装饰器链"></a>装饰器链</h1><p>一个函数可以连续被多个装饰器装饰（就像月饼外面可以层层套包装）。</p>
+<pre><code>def star(func):
+    def inner(*args, **kwargs):
+        print(&quot;*&quot; * 30)
+        func(*args, **kwargs)
+        print(&quot;*&quot; * 30)
+    return inner
+
+def percent(func):
+    def inner(*args, **kwargs):
+        print(&quot;%&quot; * 30)
+        func(*args, **kwargs)
+        print(&quot;%&quot; * 30)
+    return inner
+
+@star
+@percent
+def printer(msg):
+    print(msg)
+printer(&quot;Hello&quot;)
+</code></pre><p>上面代码的输出如下：</p>
+<pre><code>******************************
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Hello
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+******************************
+</code></pre><p>上面的代码：</p>
+<pre><code>@star
+@percent
+def printer(msg):
+    print(msg)
+</code></pre><p>等价于：</p>
+<pre><code>def printer(msg):
+    print(msg)
+printer = star(percent(printer))
+</code></pre><p>所以，装饰器的顺序对结果是有影响的，如果我们这样写：</p>
+<pre><code>@percent
+@star
+def printer(msg):
+    print(msg)
+</code></pre><p>结果就会相反：</p>
+<pre><code>The execution would take place as,
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+******************************
+Hello
+******************************
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+</code></pre><h1 id="带参数的装饰器"><a href="#带参数的装饰器" class="headerlink" title="带参数的装饰器"></a>带参数的装饰器</h1><p>有时会往装饰器中<strong>传入参数</strong>。例如我们想写一个装饰器<code>repeat</code>，功能是执行<code>N</code>次被装饰的函数。在我们使用它时，只需要指定<code>num_times</code>，即<code>@repeat(num_times)</code>,被装饰的函数就会执行相应的次数。</p>
+<p>例如：</p>
+<pre><code>@repeat(num_times=4)
+def greet(name):
+    print(f&quot;Hello {name}&quot;)
+</code></pre><p>输出：</p>
+<pre><code>&gt;&gt;&gt; greet(&quot;World&quot;)
+Hello World
+Hello World
+Hello World
+Hello World
+</code></pre><p>应该怎么实现上述功能呢？</p>
+<p>根据之前的代码，装饰器函数都是长这个样子：</p>
+<pre><code class="python">def repeat(num_times):
+    def decorator_repeat(func):
+        ...  # Create and return a wrapper function
+    return decorator_repeat
+</code></pre>
+<p>它创建并返回了一个内部的<code>wrapper</code>函数。</p>
+<p>一般，实现带有参数的装饰器都是在<strong>内部函数里再嵌套一个内部函数</strong>。听着比较绕口，就像《盗梦空间》的剧情一样：</p>
+<pre><code class="python">def repeat(num_times):
+    def decorator_repeat(func):
+        @functools.wraps(func)
+        def wrapper_repeat(*args, **kwargs):
+            for _ in range(num_times):
+                value = func(*args, **kwargs)
+            return value
+        return wrapper_repeat
+    return decorator_repeat
+</code></pre>
+<p>看起来有点乱，总共有<code>三层def</code>。但只不过是比之前的多添加了一层<code>def</code>来<strong>处理传入装饰器的参数</strong>。让我们先来看最里面的一层：</p>
+<pre><code class="python">def wrapper_repeat(*args, **kwargs):
+    for _ in range(num_times):
+        value = func(*args, **kwargs)
+    return value
+</code></pre>
+<p><code>wrapper_repeat</code>接收与被装饰函数相同数量的参数，并且返回这个函数(<code>func</code>)的执行结果。在内部，调用<code>N</code>次<code>func</code>。 这与之前的装饰器无本质区别，只是多传入了一个<code>num_times</code>参数。</p>
+<p>最外层的<code>repeat</code>函数返回了装饰函数<code>decorator_repeat</code>的一个引用：</p>
+<pre><code class="python">def repeat(num_times):
+    def decorator_repeat(func):
+        ...
+    return decorator_repeat
+</code></pre>
+<p>在<code>repeat</code>函数中，有些细节需要注意：</p>
+<ul>
+<li>定义<code>decorator_repeat()</code>作为内部函数意味着<code>repeat()</code>会调用这个函数对象。之前，装饰器调用这个函数时没有使用括号传入参数，但使用装饰器传入参数时，就需要加上括号。</li>
+<li><code>num_times</code>在<code>repeat</code>函数中好像没有用到，但是它由<code>python</code>的闭包机制传入到<code>wrapper_repeat</code>函数中。</li>
+</ul>
+<p>现在，函数就得到了我们想要的执行效果：</p>
+<pre><code>@repeat(num_times=4)
+def greet(name):
+    print(f&quot;Hello {name}&quot;)
+
+&gt;&gt;&gt; greet(&quot;World&quot;)
+Hello World
+Hello World
+Hello World
+Hello World
+</code></pre><hr>
+<p><strong>例2</strong>：</p>
+<p>如果我们想方便的开启或关闭某些函数。可以使用这种带参数的装饰器：</p>
+<pre><code>import functools
+
+
+def decorator_with_arguments(number):
+    def my_decorator(func):
+        @functools.wraps(func)
+        def real_wrapper(*args, **kwargs):
+            print(&quot;start to decorate!&quot;)
+            if number == 233:
+                print(&quot;Not running the function&quot;)
+            else:
+                func(*args, **kwargs)
+            print(&quot;After the decoration!&quot;)
+
+        return real_wrapper
+
+    return my_decorator
+
+
+@decorator_with_arguments(0)
+def add(a, b):
+    print(a + b)
+
+
+add(1, 2)
+
+</code></pre><p>执行结果：</p>
+<ul>
+<li><pre><code>start to decorate!
+3
+After the decoration!
+</code></pre></li>
+<li><p>当传入装饰器的<code>number != 233</code>，执行<code>add</code>函数，否则执行<code>add</code>函数</p>
+</li>
+<li><p>这种形式在<code>python</code>的一些框架如<code>flask</code>中经常见到。</p>
+</li>
+</ul>
+<p>喂丸待续</p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://kongpingfan.me">平凡</a>
+            </p><p>原文链接：<a href="https://kongpingfan.me/2018/10/01/python-decorator/">https://kongpingfan.me/2018/10/01/python-decorator/</a>
+            </p><p>发表日期：<a href="https://kongpingfan.me/2018/10/01/python-decorator/">October 1st 2018, 3:54:31 pm</a>
+            </p><p>更新日期：<a href="https://kongpingfan.me/2018/10/01/python-decorator/">May 4th 2019, 6:52:03 pm</a>
+            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2018/10/03/python-functools-wraps/" title="python的@functools.wraps">
+                    <div class="nextTitle">python的@functools.wraps</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2018/09/30/python-property/" title="python中的@property">
+                    <div class="prevTitle">python中的@property</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+<div id="container"></div>
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+<script>
+    var gitment = new Gitment({
+        // id: "python的装饰器", // 可选。默认为 location.href
+        owner: 'kongpingfan',
+        repo: 'https://github.com/kongpingfan/kongpingfan.github.io.git',
+        oauth: {
+            client_id: 'fe1d682221309cb76b6a',
+            client_secret: '8ab8a6b1fdd4d680430449e70f3b32c721aa342a',
+        },
+    })
+    gitment.render('container')
+
+</script>
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:admin@kongpingfan.com" class="iconfont-archer email" title="email"></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/kongpingfan" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title="wechat">
+                  
+                  <img class="profile-qr" src="/assets/qrcode.jpg">
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前置知识"><span class="toc-number">1.</span> <span class="toc-text">前置知识</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#装饰器"><span class="toc-number">2.</span> <span class="toc-text">装饰器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#装饰带有参数的函数"><span class="toc-number">3.</span> <span class="toc-text">装饰带有参数的函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#装饰器链"><span class="toc-number">4.</span> <span class="toc-text">装饰器链</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#带参数的装饰器"><span class="toc-number">5.</span> <span class="toc-text">带参数的装饰器</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 17
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href="/2019/04/20/Viper源码分析/">golang库——Viper源码分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/14</span><a class="archive-post-title" href="/2019/04/14/GraphQL初探/">GraphQL初探</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/alfred/">MAC下神器alfred的使用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/15</span><a class="archive-post-title" href="/2018/11/15/python-logging-module/">python日志记录模块</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/07</span><a class="archive-post-title" href="/2018/11/07/understand-linux-shell-2-1/">理解linux命令 - 2>&1</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/07</span><a class="archive-post-title" href="/2018/11/07/understand-linux-shell-command-nohup/">理解linux命令 - nohup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href="/2018/10/03/python-functools-wraps/">python的@functools.wraps</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/01</span><a class="archive-post-title" href="/2018/10/01/python-decorator/">python的装饰器</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/30</span><a class="archive-post-title" href="/2018/09/30/python-property/">python中的@property</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/29</span><a class="archive-post-title" href="/2018/09/29/python-PIL/">python的PIL</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/19</span><a class="archive-post-title" href="/2018/09/19/tencent-school-recruitment-testing/">某次腾讯校招笔试解析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/05</span><a class="archive-post-title" href="/2018/09/05/database-locking/">数据库的锁</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span><a class="archive-post-title" href="/2018/09/01/understanding-MySQL-index/">理解MySQL的索引</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href="/2018/08/31/deal-with-python-re-multipule-line/">python正则的多行匹配问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/23</span><a class="archive-post-title" href="/2018/08/23/python_three_kinds_of_methods/">python的类方法、实例方法和静态方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/14</span><a class="archive-post-title" href="/2018/05/14/the_4th_cstc_writeup/">第四届全国网络空间安全技术大赛 writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/05</span><a class="archive-post-title" href="/2018/05/05/ciscn-2018-writeup/">ciscn 2018 第十一届全国大学生信息安全竞赛writeup</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="tools"><span class="iconfont-archer">&#xe606;</span>tools</span>
+    
+        <span class="sidebar-tag-name" data-tags="python"><span class="iconfont-archer">&#xe606;</span>python</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
+        <span class="sidebar-tag-name" data-tags="python 正则"><span class="iconfont-archer">&#xe606;</span>python 正则</span>
+    
+        <span class="sidebar-tag-name" data-tags="programming"><span class="iconfont-archer">&#xe606;</span>programming</span>
+    
+        <span class="sidebar-tag-name" data-tags="linux"><span class="iconfont-archer">&#xe606;</span>linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="MySQL"><span class="iconfont-archer">&#xe606;</span>MySQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="golang"><span class="iconfont-archer">&#xe606;</span>golang</span>
+    
+        <span class="sidebar-tag-name" data-tags="ctf writeup"><span class="iconfont-archer">&#xe606;</span>ctf writeup</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="tools"><span class="iconfont-archer">&#xe60a;</span>tools</span>
+    
+        <span class="sidebar-category-name" data-categories="python"><span class="iconfont-archer">&#xe60a;</span>python</span>
+    
+        <span class="sidebar-category-name" data-categories="programming"><span class="iconfont-archer">&#xe60a;</span>programming</span>
+    
+        <span class="sidebar-category-name" data-categories="linux"><span class="iconfont-archer">&#xe60a;</span>linux</span>
+    
+        <span class="sidebar-category-name" data-categories="MySQL"><span class="iconfont-archer">&#xe60a;</span>MySQL</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "平凡"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

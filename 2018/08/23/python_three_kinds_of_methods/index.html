@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="平凡">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="平凡">
+    
+    <meta name="keywords" content="kongpingfan,kongpingfan-blog,pingfan">
+    
+    <meta name="description" content>
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>python的类方法、实例方法和静态方法 · Kongpingfan&#39;s Blog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script> -->
+
+
+    <!-- <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atelier-heath-light.min.css"> -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/vs2015.min.css">
+
+    <script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- 百度统计  -->
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?b4bccf94e7fc5c0889f3eb16e5147882";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">Pingfan&#39;s Blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">python的类方法、实例方法和静态方法</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">Pingfan's Blog</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            python的类方法、实例方法和静态方法
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class="post-intro-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="python">python</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">1.6k</span>阅读时长: <span class="post-count reading-time">6 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/08/23</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h1><p>让我们写一个类，包含类中的三种方法（<code>instance method、class method、static method</code>）</p>
+<pre><code>class MyClass:
+    def method(self):
+        return &quot;instance method called&quot;, self
+
+
+    @classmethod
+    def classmethod(cls):
+        return &quot;class method called&quot;,cls
+
+    @ staticmethod
+    def staticmthod():
+        return &quot;static method called&quot;
+
+print(MyClass().method())
+print(MyClass.classmethod())
+print(MyClass.staticmthod())
+</code></pre><p>结果：</p>
+<pre><code>(&#39;instance method called&#39;, &lt;__main__.MyClass object at 0x10225a6a0&gt;)
+(&#39;class method called&#39;, &lt;class &#39;__main__.MyClass&#39;&gt;)
+static method called
+</code></pre><hr>
+<p>从上面的例子中可以看出：</p>
+<ul>
+<li><code>instance method</code>的第一个参数是<code>self</code></li>
+<li><code>classmethod</code>的第一个参数是<code>cls</code></li>
+<li><code>static method</code>对参数没有要求</li>
+<li>除了<code>instance method</code>外，其他两类方法都不用实例化。</li>
+</ul>
+<hr>
+<p>关于<code>self</code>和<code>cls</code>关键字，还可以这样理解：</p>
+<ul>
+<li><code>self</code>指向了一个类的实例</li>
+<li><code>cls</code>指向的是类本身</li>
+</ul>
+<hr>
+<p>那么，这三种方法有什么区别呢</p>
+<ul>
+<li>对于<code>instance method</code>, 这个方法可以随意调用对象中的其他方法；另外它可也可通过<code>self.__class__</code>属性来修改类的状态。</li>
+<li>而<code>class method</code>很明显不能调用对象中的方法(毕竟它不伴随对象)。但是它可以更改类的状态。</li>
+<li><code>static method</code>, 这种方法既不能修改对象的状态，也不能修改类的状态。</li>
+</ul>
+<hr>
+<h1 id="通过实例来理解这三种方法"><a href="#通过实例来理解这三种方法" class="headerlink" title="通过实例来理解这三种方法"></a>通过实例来理解这三种方法</h1><p>再来分析一遍上面运行的结果：</p>
+<pre><code>print(MyClass().method())
+print(MyClass.classmethod())
+print(MyClass.staticmthod())
+
+# result
+(&#39;instance method called&#39;, &lt;__main__.MyClass object at 0x10225a6a0&gt;)
+(&#39;class method called&#39;, &lt;class &#39;__main__.MyClass&#39;&gt;)
+static method called
+</code></pre><hr>
+<p>首先来看第一行，<code>instance method</code>, </p>
+<ul>
+<li>由于它输出了<code>MyClass object</code>，所以，可以确信它能够访问类的对象实例。</li>
+<li>当这个方法被调用，python就会将<code>self</code>参数替换为类的实例</li>
+</ul>
+<hr>
+<p><strong>为什么要加<code>self</code>和<code>cls</code></strong><br>我们在写python类方法的时候，可能一开始很奇怪，我们的编辑器默认自动为我们添加了第一个参数<code>self</code><br>上面classmethod也是自动加了一个cls参数。<br>其实，<code>self</code>与<code>cls</code>只是约定俗成。你可以随便命名（没想到吧），例如：</p>
+<pre><code>def method2(selfhahaha):
+    return &quot;instance method called&quot;, selfhahaha
+
+@classmethod
+def classmethod2(clssssss):
+    return &quot;class method was called&quot;, clssssss
+</code></pre><p>看到这代码，也许你会眉头一皱，这难道也行? 但结果确实是可以运行的：</p>
+<pre><code>print(MyClass().method2())
+print(MyClass.classmethod2())
+
+# result:
+(&#39;instance method called&#39;, &lt;__main__.MyClass object at 0x1061eecf8&gt;)
+(&#39;class method was called&#39;, &lt;class &#39;__main__.MyClass&#39;&gt;)
+</code></pre><p><strong>但唯一要注意的是：必须放到第一个参数的位置</strong></p>
+<hr>
+<p>好了，现在是时候分析最后一个<code>static method</code>了：<br>我们这样调用：</p>
+<pre><code>obj1 = MyClass()
+print(obj1.staticmthod())
+</code></pre><p>结果<strong>竟然……</strong>可以运行：</p>
+<pre><code>static method called
+</code></pre><p>一些人可能是第一次听说，<strong>静态方法通过类的对象也是可以调用的</strong>。<br>其实在<code>java</code>里，我们也可以这样做，只不过java并不推荐这种调用方式：</p>
+<pre><code>public class Solution {
+
+
+    public static void helloWorld(){
+        System.out.println(&quot;hello world&quot;);
+    }
+
+
+    public static void main(String[] args) {
+
+        Solution solution=new Solution();
+        solution.helloWorld();
+
+    }
+}
+</code></pre><hr>
+<p>可以看到，<code>static method</code>既没有<code>self</code>参数，也没有<code>cls</code>参数，所以这类方法既不能访问类的状态，也不能访问对象的状态。</p>
+<hr>
+<p>现在，大家对这三种方法的区别可能有了一个大致的印象，但是什么时候该使用这些方法呢？</p>
+<hr>
+<h1 id="使用-classmethod实现Pizza工厂"><a href="#使用-classmethod实现Pizza工厂" class="headerlink" title="使用@classmethod实现Pizza工厂"></a>使用@classmethod实现Pizza工厂</h1><p>首先我们来实现一个pizza类：</p>
+<pre><code>class Pizza:
+    def __init__(self, ingredients):
+        self.ingredients = ingredients
+
+    def __repr__(self):
+        return &quot;Pizza({})&quot;.format(self.ingredients)
+
+    __str__ = __repr__
+
+
+print(Pizza([&#39;cheese&#39;, &#39;tomatoes&#39;]))
+</code></pre><p>上面代码很简单，传入一个数组<code>ingredients</code>，代表pizza的原材料。返回一个pizza对象。</p>
+<hr>
+<p>现实生活中有许多pizza类别，例如：</p>
+<pre><code>Pizza([&#39;mozzarella&#39;, &#39;tomatoes&#39;])
+Pizza([&#39;mozzarella&#39;, &#39;tomatoes&#39;, &#39;ham&#39;, &#39;mushrooms&#39;])
+Pizza([&#39;mozzarella&#39;] * 4)
+</code></pre><p>所以，可以对上面的类进行改进，使它可以更好的提供pizza对象。</p>
+<p>一个很简单也是很有效的方法是：使用classmethod来当作一个<strong>工厂方法</strong>来产生不同的pizza（工厂模式是设计模式里的一种，具体原理很简单就不介绍了）。</p>
+<pre><code>class Pizza:
+    def __init__(self, ingredients):
+        self.ingredients = ingredients
+
+    def __repr__(self):
+        return &quot;Pizza({})&quot;.format(self.ingredients)
+
+    __str__ = __repr__
+
+    @classmethod
+    def margherita(cls):
+        return cls([&#39;mozzarella&#39;, &#39;tomatoes&#39;])
+
+    @classmethod
+    def prosciutto(cls):
+        return cls([&#39;mozzarella&#39;, &#39;tomatoes&#39;, &#39;ham&#39;])
+</code></pre><p>现在，我们就可以使用这些工厂方法来产生不同类型的Pizza对象了：</p>
+<pre><code>&gt;&gt;&gt; Pizza.margherita()
+Pizza([&#39;mozzarella&#39;, &#39;tomatoes&#39;])
+
+&gt;&gt;&gt; Pizza.prosciutto()
+Pizza([&#39;mozzarella&#39;, &#39;tomatoes&#39;, &#39;ham&#39;])
+</code></pre><p>很显而易见的一个优点是：<strong>我们不需要记住乱七八糟的<code>ingredients</code>，只需要报pizza的名字就可以</strong>。这跟我们去餐饮点菜是一样的，直接报菜名（蒸羊羔儿、蒸熊掌、蒸鹿尾儿、烧花鸭、烧雏鸡、烧子鹅、炉猪、炉鸭、酱鸡、腊肉、松花、小肚儿、酱肉、香肠、……），但谁会记住它们的原材料是什么呢？</p>
+<hr>
+<p>python每个类只有一个<code>__init__</code>初始化方法，但是通过<code>class method</code>，我们神奇的发现，竟然实现了<code>多种多样的构造函数</code>，这让我们的类更加易用。（这就像女朋友只能有一个，但是通过class method，竟然让你找到了一堆xx呢）</p>
+<hr>
+<h1 id="什么时候使用static-method"><a href="#什么时候使用static-method" class="headerlink" title="什么时候使用static method"></a>什么时候使用static method</h1><p>现在将上面的类更改一下，加入半径<code>radius</code>这个参数，再写一个求面积的方法：</p>
+<pre><code>class Pizza:
+    def __init__(self, ingredients, radius):
+        self.ingredients = ingredients
+        self.radius = radius
+
+    def __repr__(self):
+        return &quot;Pizza({})&quot;.format(self.ingredients)
+
+    __str__ = __repr__
+
+    def area(self):
+        return self.circle_area(self.radius)
+
+    @staticmethod
+    def circle_area(r):
+        return 3.14 * r ** 2
+</code></pre><p>将求面积的方法单独写到了<code>circle_area</code>中。<br>测试：</p>
+<pre><code>p = Pizza([&#39;mozzarella&#39;, &#39;tomatoes&#39;], 4)
+print(p.area())
+
+# result:
+50.24
+</code></pre><p>这个例子很简单，但能帮助我们理解<code>static method</code>的优点。<br>在上面介绍过，<code>static method</code>既不能访问类，又不能访问对象，因为它没有<code>cls</code>和<code>self</code>参数。但正因如此，它具有<strong>独立</strong>的优点。<br>为什么这样说呢？<br><strong>它避免了在开发过程中对程序的改动</strong>（我们知道，程序员代码都是写一天调一个星期、甚至一个月，初始的架构可能后面改的体无完肤）<br>在测试时，<code>static method</code>也具有很大优点。因为它与类无关，我们并不需要初始化一个对象，所以更容易测试。这也为后期的维护带来方便。</p>
+<hr>
+<p>参考并翻译自：<a href="https://realpython.com/instance-class-and-static-methods-demystified" target="_blank" rel="noopener">链接</a></p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://kongpingfan.me">平凡</a>
+            </p><p>原文链接：<a href="https://kongpingfan.me/2018/08/23/python_three_kinds_of_methods/">https://kongpingfan.me/2018/08/23/python_three_kinds_of_methods/</a>
+            </p><p>发表日期：<a href="https://kongpingfan.me/2018/08/23/python_three_kinds_of_methods/">August 23rd 2018, 7:39:04 pm</a>
+            </p><p>更新日期：<a href="https://kongpingfan.me/2018/08/23/python_three_kinds_of_methods/">May 4th 2019, 6:52:03 pm</a>
+            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2018/08/31/deal-with-python-re-multipule-line/" title="python正则的多行匹配问题">
+                    <div class="nextTitle">python正则的多行匹配问题</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2018/05/14/the_4th_cstc_writeup/" title="第四届全国网络空间安全技术大赛 writeup">
+                    <div class="prevTitle">第四届全国网络空间安全技术大赛 writeup</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+<div id="container"></div>
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+<script>
+    var gitment = new Gitment({
+        // id: "python的类方法、实例方法和静态方法", // 可选。默认为 location.href
+        owner: 'kongpingfan',
+        repo: 'https://github.com/kongpingfan/kongpingfan.github.io.git',
+        oauth: {
+            client_id: 'fe1d682221309cb76b6a',
+            client_secret: '8ab8a6b1fdd4d680430449e70f3b32c721aa342a',
+        },
+    })
+    gitment.render('container')
+
+</script>
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:admin@kongpingfan.com" class="iconfont-archer email" title="email"></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/kongpingfan" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title="wechat">
+                  
+                  <img class="profile-qr" src="/assets/qrcode.jpg">
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#概览"><span class="toc-number">1.</span> <span class="toc-text">概览</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#通过实例来理解这三种方法"><span class="toc-number">2.</span> <span class="toc-text">通过实例来理解这三种方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用-classmethod实现Pizza工厂"><span class="toc-number">3.</span> <span class="toc-text">使用@classmethod实现Pizza工厂</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#什么时候使用static-method"><span class="toc-number">4.</span> <span class="toc-text">什么时候使用static method</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 17
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href="/2019/04/20/Viper源码分析/">golang库——Viper源码分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/14</span><a class="archive-post-title" href="/2019/04/14/GraphQL初探/">GraphQL初探</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/alfred/">MAC下神器alfred的使用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/15</span><a class="archive-post-title" href="/2018/11/15/python-logging-module/">python日志记录模块</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/07</span><a class="archive-post-title" href="/2018/11/07/understand-linux-shell-2-1/">理解linux命令 - 2>&1</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/07</span><a class="archive-post-title" href="/2018/11/07/understand-linux-shell-command-nohup/">理解linux命令 - nohup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href="/2018/10/03/python-functools-wraps/">python的@functools.wraps</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/01</span><a class="archive-post-title" href="/2018/10/01/python-decorator/">python的装饰器</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/30</span><a class="archive-post-title" href="/2018/09/30/python-property/">python中的@property</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/29</span><a class="archive-post-title" href="/2018/09/29/python-PIL/">python的PIL</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/19</span><a class="archive-post-title" href="/2018/09/19/tencent-school-recruitment-testing/">某次腾讯校招笔试解析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/05</span><a class="archive-post-title" href="/2018/09/05/database-locking/">数据库的锁</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span><a class="archive-post-title" href="/2018/09/01/understanding-MySQL-index/">理解MySQL的索引</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href="/2018/08/31/deal-with-python-re-multipule-line/">python正则的多行匹配问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/23</span><a class="archive-post-title" href="/2018/08/23/python_three_kinds_of_methods/">python的类方法、实例方法和静态方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/14</span><a class="archive-post-title" href="/2018/05/14/the_4th_cstc_writeup/">第四届全国网络空间安全技术大赛 writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/05</span><a class="archive-post-title" href="/2018/05/05/ciscn-2018-writeup/">ciscn 2018 第十一届全国大学生信息安全竞赛writeup</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="tools"><span class="iconfont-archer">&#xe606;</span>tools</span>
+    
+        <span class="sidebar-tag-name" data-tags="python"><span class="iconfont-archer">&#xe606;</span>python</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
+        <span class="sidebar-tag-name" data-tags="python 正则"><span class="iconfont-archer">&#xe606;</span>python 正则</span>
+    
+        <span class="sidebar-tag-name" data-tags="programming"><span class="iconfont-archer">&#xe606;</span>programming</span>
+    
+        <span class="sidebar-tag-name" data-tags="linux"><span class="iconfont-archer">&#xe606;</span>linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="MySQL"><span class="iconfont-archer">&#xe606;</span>MySQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="golang"><span class="iconfont-archer">&#xe606;</span>golang</span>
+    
+        <span class="sidebar-tag-name" data-tags="ctf writeup"><span class="iconfont-archer">&#xe606;</span>ctf writeup</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="tools"><span class="iconfont-archer">&#xe60a;</span>tools</span>
+    
+        <span class="sidebar-category-name" data-categories="python"><span class="iconfont-archer">&#xe60a;</span>python</span>
+    
+        <span class="sidebar-category-name" data-categories="programming"><span class="iconfont-archer">&#xe60a;</span>programming</span>
+    
+        <span class="sidebar-category-name" data-categories="linux"><span class="iconfont-archer">&#xe60a;</span>linux</span>
+    
+        <span class="sidebar-category-name" data-categories="MySQL"><span class="iconfont-archer">&#xe60a;</span>MySQL</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "平凡"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

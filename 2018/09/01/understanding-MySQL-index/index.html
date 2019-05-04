@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="平凡">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="平凡">
+    
+    <meta name="keywords" content="kongpingfan,kongpingfan-blog,pingfan">
+    
+    <meta name="description" content>
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>理解MySQL的索引 · Kongpingfan&#39;s Blog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script> -->
+
+
+    <!-- <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atelier-heath-light.min.css"> -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/vs2015.min.css">
+
+    <script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- 百度统计  -->
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?b4bccf94e7fc5c0889f3eb16e5147882";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">Pingfan&#39;s Blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">理解MySQL的索引</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">Pingfan's Blog</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            理解MySQL的索引
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class="post-intro-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="MySQL">MySQL</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2.1k</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/09/01</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>在Web应用中，如果出现性能问题，原因极有可能是数据库索引没有设置或者没有设置好。这篇文章希望能帮助大家更好的理解数据库索引。</p>
+<h1 id="什么是索引"><a href="#什么是索引" class="headerlink" title="什么是索引"></a>什么是索引</h1><p>每当你运行一句<code>where</code>查询，数据库都会遍历一遍该表，找到符合条件的行。<br>例如查询班里名叫张三的性别：</p>
+<pre><code>select sex from class where name=&quot;张三&quot;
+</code></pre><p>数据库会把该班级表中所有学生都遍历一遍。<br>当表的规模扩大后，每一次查询都要遍历更多的数据。</p>
+<p>索引就是为了解决这个问题，它把某列的数据取出来，<strong>按顺序</strong>（如字母顺序）存储到别的位置。如果该列数据是浮点数，就会按值的大小存储，如果是日期类型，那就按日期大小存储。</p>
+<p>建立索引以后，再查询该列的数据便不需要遍历整个表，而是以低时间复杂度(如<code>logn</code>)在索引中查到某条数据，然后直接定位到该列原始数据（时间复杂度<code>O(1)</code>）。</p>
+<h1 id="索引的数据结构"><a href="#索引的数据结构" class="headerlink" title="索引的数据结构"></a>索引的数据结构</h1><p>我们知道，数据库查询是数据库的最主要功能之一，我们都希望查询数据的速度能尽可能的快。最基本的查询算法当然是<a href="http://en.wikipedia.org/wiki/Linear_search" target="_blank" rel="noopener">顺序查找</a>（linear search），这种复杂度为O(n)的算法在数据量很大时显然是糟糕的。</p>
+<p>好在计算机科学的发展提供了很多更优秀的查找算法，例如<a href="http://en.wikipedia.org/wiki/Binary_search_algorithm" target="_blank" rel="noopener">二分查找</a>（binary search）、<a href="http://en.wikipedia.org/wiki/Binary_search_tree" target="_blank" rel="noopener">二叉树查找</a>（binary tree search）等。如果稍微分析一下会发现，每种查找算法都只能应用于特定的数据结构之上，例如二分查找要求<strong>被检索数据有序排列</strong>，而二叉树查找只能应用于<a href="http://en.wikipedia.org/wiki/Binary_search_tree" target="_blank" rel="noopener">二叉查找树</a>上</p>
+<p>但是数据本身的组织结构不可能完全满足各种数据结构（例如，理论上不可能同时将两列都按顺序进行组织）。所以，在数据之外，数据库系统还维护着满足特定查找算法的数据结构，这些数据结构<code>以某种方式引用（指向）数据</code>，这样就可以<strong>在这些数据结构上实现高级查找算法</strong>。这种数据结构，就是索引。<br>看一个例子：<br><img src="https://upload-images.jianshu.io/upload_images/1386888-6cc65233cc122a1f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>图中展示了一种可能的索引方式。左边是数据表，一共有两列七条记录，最左边的是数据记录的物理地址（注意逻辑上相邻的记录在磁盘上也并不是一定物理相邻的）。为了加快Col2的查找，可以维护一个右边所示的二叉查找树，每个节点分别包含索引键值和一个指向对应数据记录物理地址的指针，这样就可以运用二叉查找在的复杂度内获取到相应数据。</p>
+<p>虽然这是一个货真价实的索引，但是实际的数据库系统一般采用B树（我的心里没有B树）及其变种实现。</p>
+<h1 id="建立索引"><a href="#建立索引" class="headerlink" title="建立索引"></a>建立索引</h1><p>许多Web框架已经集成了建立索引的操作，例如<code>laravel</code>中，可以使用<code>migration</code>语句直接建立索引(<a href="https://laravel.com/docs/5.6/migrations)。但了解MySQL原生语句怎样建立索引也是很有必要的。" target="_blank" rel="noopener">https://laravel.com/docs/5.6/migrations)。但了解MySQL原生语句怎样建立索引也是很有必要的。</a></p>
+<p>例如，假如有个学生非常多(超过100,000人)的学校，我们建立了一张表来存储学生的数据，这个表的前面几条数据如下：<br><img src="https://upload-images.jianshu.io/upload_images/1386888-89181bd2ecad0236.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br>建立这个表的SQL语句是这样写的：</p>
+<pre><code class="sql">CREATE TABLE `students` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  `class` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB
+</code></pre>
+<p>现在我们要对该表进行查询，主要有三个需求：</p>
+<ul>
+<li>根据<code>id</code>查找学生</li>
+<li>根据<code>last_name</code>查找学生</li>
+<li>查询某班上的所有学生</li>
+</ul>
+<p>我们发现一个规律，这些查询都是在根据列在查询（第一个是学生id，第二个是<code>last_name</code>, 第三个是<code>class</code>）。所以，我们要确保<strong>每列都有自己的索引</strong>。</p>
+<p>第一种查询<code>SELECT * FROM students WHERE id = 1</code>,这种查询很特别，它根据<code>primary key</code>——主键来查询。我们都知道了要查哪一行(id=1,所以是第一行)，直接跳到该行就可以了，不再需要进行建立索引操作来优化。理想的情况是每种查询都能像这样（但实际情况肯定并非如此）。每张表都应该像这样建立一个主键。</p>
+<hr>
+<p>第二个查询<code>SELECT * FROM students WHERE last_name = &#39;Smith&#39;</code>。由于<code>last_name</code>这一列没有建立索引，所以会遍历整个表来找到目标。现在我们要在该表创建索引：</p>
+<pre><code>CREATE INDEX by_last_name ON students(`last_name`);
+</code></pre><p>这样，该表就有了一个名叫<code>by_last_name</code>的索引，让我们以后在查询<code>last_name</code>这一列时，速度能大大提升。</p>
+<p>和它一样，也可以在<code>class</code>这一列上建立索引，加速我们<code>查询某个班级的学生</code>的操作。建立索引的语句可以这样写：</p>
+<pre><code>CREATE INDEX by_class ON students(`class`);
+</code></pre><h1 id="同时查询多个列"><a href="#同时查询多个列" class="headerlink" title="同时查询多个列"></a>同时查询多个列</h1><p>在数据库查询中，经常要同时查询多个列，例如我们知道某学生叫<code>Smith</code>和它的班级<code>6A</code>，想要取出它的所有信息，查询语句应该这样写：</p>
+<pre><code>SELECT * FROM students WHERE class = `6A` AND last_name = &#39;Smith&#39;
+</code></pre><p><code>MYSQL</code>通常<code>只会使用一种索引</code>来查询，所以我们建立的两个索引就不会同时生效。但我们也不必再建立其他索引了。</p>
+<p>数据库引擎会发现我们在class上建立了索引，而且每个class大约只有20个学生，它会使用<code>by_class</code>这个索引来搜索班里的20个学生，再查找这20个学生的<code>last_name</code>。查找20条数据对于MySQL不是什么难事（和100000+数据比起来），而且我们避免了再建立其他索引对空间的浪费。</p>
+<hr>
+<h1 id="同时对多个表建立索引"><a href="#同时对多个表建立索引" class="headerlink" title="同时对多个表建立索引"></a>同时对多个表建立索引</h1><p>上个例子中，我们假设每个班级只有20名学生，但如果有些班级人数非常多，超过了100人呢？<br>这种情况下，我们应该改进一下<code>by_class_index</code>索引，让它同时支持<code>by_last_name</code>, 虽然使用了额外的空间，但使得同时查询这两列的速度大大加快。</p>
+<pre><code class="sql">DROP INDEX by_class ON students;
+CREATE INDEX by_class_and_last_name ON students(class, last_name);
+</code></pre>
+<p>为什么删除<code>by_class</code>这种索引呢？因为我们新建立的索引<strong>既可以同时查询<code>class</code>和<code>last_name</code>，又可以只根据<code>class</code>查询</strong>，使得<code>by_class</code>这个索引显得多余。</p>
+<hr>
+<h1 id="Join查询"><a href="#Join查询" class="headerlink" title="Join查询"></a>Join查询</h1><p>实际应用中，极有可能出现<code>Join</code>查询，例如，学生可能有张成绩表<code>grades</code>,它可能长这样：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1386888-45ec5d02cb85d9a7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>想查询一个某个学生id对应的所有成绩，查询语句如下：</p>
+<pre><code class="sql">SELECT * FROM grades WHERE student_id = 1
+</code></pre>
+<p>如果想查询某个班里学生的所有成绩,就要使用<code>Join</code>查询：</p>
+<pre><code class="sql">SELECT * from students WHERE class = &#39;6A&#39; JOIN grades on grades.student_id = students.id
+</code></pre>
+<p>上面这两种查询都使用了<code>student_id</code>这个外键。通常要为外键设立一个索引：</p>
+<pre><code class="sql">CREATE INDEX by_student_id ON grades(student_id);
+</code></pre>
+<h1 id="如何选择你要建立索引的列"><a href="#如何选择你要建立索引的列" class="headerlink" title="如何选择你要建立索引的列"></a>如何选择你要建立索引的列</h1><p>除了分析你的查询语句，你可以过一遍数据库中的表，分析哪些字段可能会被查询，然后建立它们的索引。下面是一些经验，可以直接在这些列上建立索引：</p>
+<ul>
+<li>与其他表进行<code>Join</code>操作的列(这些列通常以<code>xxx_id</code>命名)</li>
+<li><code>username</code> 、<code>email</code>等字段，当用户登录的时候每次都会查询这些列。</li>
+</ul>
+<hr>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>如果你发现你的<code>select</code>操作非常的慢，极有可能是你没有为你的表建立索引。看一下哪一列被查询了，然后在该列建立索引, 使用这种语法：</p>
+<pre><code class="sql">CREATE INDEX by_student_id ON grades(student_id);
+</code></pre>
+<p>把注意力放到数据比较多的表上进行优化。</p>
+<h1 id="索引的缺点"><a href="#索引的缺点" class="headerlink" title="索引的缺点"></a>索引的缺点</h1><p>上面一直在扯索引的好处，但索引很容易被滥用。它是一把双刃剑。</p>
+<p>索引有它的缺点：虽然索引大大提高了查询速度，同时却会降低更新表的速度，如对表进行<code>INSERT、UPDATE</code>和<code>DELETE</code>。因为更新表时，MySQL不仅要保存数据，还要保存一下索引文件。</p>
+<hr>
+<p><strong>参考及翻译自：</strong><br><a href="https://atech.blog/viaduct/mysql-indexes-primer" target="_blank" rel="noopener">https://atech.blog/viaduct/mysql-indexes-primer</a><br><a href="http://blog.codinglabs.org/articles/theory-of-mysql-index.html" target="_blank" rel="noopener">http://blog.codinglabs.org/articles/theory-of-mysql-index.html</a></p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://kongpingfan.me">平凡</a>
+            </p><p>原文链接：<a href="https://kongpingfan.me/2018/09/01/understanding-MySQL-index/">https://kongpingfan.me/2018/09/01/understanding-MySQL-index/</a>
+            </p><p>发表日期：<a href="https://kongpingfan.me/2018/09/01/understanding-MySQL-index/">September 1st 2018, 6:24:40 pm</a>
+            </p><p>更新日期：<a href="https://kongpingfan.me/2018/09/01/understanding-MySQL-index/">May 4th 2019, 6:52:03 pm</a>
+            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2018/09/05/database-locking/" title="数据库的锁">
+                    <div class="nextTitle">数据库的锁</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2018/08/31/deal-with-python-re-multipule-line/" title="python正则的多行匹配问题">
+                    <div class="prevTitle">python正则的多行匹配问题</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+<div id="container"></div>
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+<script>
+    var gitment = new Gitment({
+        // id: "理解MySQL的索引", // 可选。默认为 location.href
+        owner: 'kongpingfan',
+        repo: 'https://github.com/kongpingfan/kongpingfan.github.io.git',
+        oauth: {
+            client_id: 'fe1d682221309cb76b6a',
+            client_secret: '8ab8a6b1fdd4d680430449e70f3b32c721aa342a',
+        },
+    })
+    gitment.render('container')
+
+</script>
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:admin@kongpingfan.com" class="iconfont-archer email" title="email"></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/kongpingfan" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title="wechat">
+                  
+                  <img class="profile-qr" src="/assets/qrcode.jpg">
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#什么是索引"><span class="toc-number">1.</span> <span class="toc-text">什么是索引</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#索引的数据结构"><span class="toc-number">2.</span> <span class="toc-text">索引的数据结构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#建立索引"><span class="toc-number">3.</span> <span class="toc-text">建立索引</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#同时查询多个列"><span class="toc-number">4.</span> <span class="toc-text">同时查询多个列</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#同时对多个表建立索引"><span class="toc-number">5.</span> <span class="toc-text">同时对多个表建立索引</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Join查询"><span class="toc-number">6.</span> <span class="toc-text">Join查询</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#如何选择你要建立索引的列"><span class="toc-number">7.</span> <span class="toc-text">如何选择你要建立索引的列</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#小结"><span class="toc-number">8.</span> <span class="toc-text">小结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#索引的缺点"><span class="toc-number">9.</span> <span class="toc-text">索引的缺点</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 17
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href="/2019/04/20/Viper源码分析/">golang库——Viper源码分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/14</span><a class="archive-post-title" href="/2019/04/14/GraphQL初探/">GraphQL初探</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/alfred/">MAC下神器alfred的使用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/15</span><a class="archive-post-title" href="/2018/11/15/python-logging-module/">python日志记录模块</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/07</span><a class="archive-post-title" href="/2018/11/07/understand-linux-shell-2-1/">理解linux命令 - 2>&1</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/07</span><a class="archive-post-title" href="/2018/11/07/understand-linux-shell-command-nohup/">理解linux命令 - nohup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href="/2018/10/03/python-functools-wraps/">python的@functools.wraps</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/01</span><a class="archive-post-title" href="/2018/10/01/python-decorator/">python的装饰器</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/30</span><a class="archive-post-title" href="/2018/09/30/python-property/">python中的@property</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/29</span><a class="archive-post-title" href="/2018/09/29/python-PIL/">python的PIL</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/19</span><a class="archive-post-title" href="/2018/09/19/tencent-school-recruitment-testing/">某次腾讯校招笔试解析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/05</span><a class="archive-post-title" href="/2018/09/05/database-locking/">数据库的锁</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span><a class="archive-post-title" href="/2018/09/01/understanding-MySQL-index/">理解MySQL的索引</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href="/2018/08/31/deal-with-python-re-multipule-line/">python正则的多行匹配问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/23</span><a class="archive-post-title" href="/2018/08/23/python_three_kinds_of_methods/">python的类方法、实例方法和静态方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/14</span><a class="archive-post-title" href="/2018/05/14/the_4th_cstc_writeup/">第四届全国网络空间安全技术大赛 writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/05</span><a class="archive-post-title" href="/2018/05/05/ciscn-2018-writeup/">ciscn 2018 第十一届全国大学生信息安全竞赛writeup</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="tools"><span class="iconfont-archer">&#xe606;</span>tools</span>
+    
+        <span class="sidebar-tag-name" data-tags="python"><span class="iconfont-archer">&#xe606;</span>python</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
+        <span class="sidebar-tag-name" data-tags="python 正则"><span class="iconfont-archer">&#xe606;</span>python 正则</span>
+    
+        <span class="sidebar-tag-name" data-tags="programming"><span class="iconfont-archer">&#xe606;</span>programming</span>
+    
+        <span class="sidebar-tag-name" data-tags="linux"><span class="iconfont-archer">&#xe606;</span>linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="MySQL"><span class="iconfont-archer">&#xe606;</span>MySQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="golang"><span class="iconfont-archer">&#xe606;</span>golang</span>
+    
+        <span class="sidebar-tag-name" data-tags="ctf writeup"><span class="iconfont-archer">&#xe606;</span>ctf writeup</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="tools"><span class="iconfont-archer">&#xe60a;</span>tools</span>
+    
+        <span class="sidebar-category-name" data-categories="python"><span class="iconfont-archer">&#xe60a;</span>python</span>
+    
+        <span class="sidebar-category-name" data-categories="programming"><span class="iconfont-archer">&#xe60a;</span>programming</span>
+    
+        <span class="sidebar-category-name" data-categories="linux"><span class="iconfont-archer">&#xe60a;</span>linux</span>
+    
+        <span class="sidebar-category-name" data-categories="MySQL"><span class="iconfont-archer">&#xe60a;</span>MySQL</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "平凡"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

