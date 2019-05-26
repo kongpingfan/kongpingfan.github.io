@@ -366,6 +366,56 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2019/05/26/bash脚本军规/">
+            
+                <span>bash脚本军规</span>
+        </a>
+        <div class="abstract-content">
+            
+脚本以shebang开头。例如：
+ #!/bin/bash
+
+
+shebang下面紧跟一行注释，表示脚本的用途，例如：
+ # This script creates a backup of every MySQL database on the system. 
+
+
+
+下面紧跟全局变量声明，并赋值：
+ DEBUG=true 
+ HTML_DIR=/var/www 
+
+函数应该注意使用局部变量，例如：
+ local GREETING=&quot;Hello!&quot; 
+
+
+
+所有函数声明放到上半部分，shell主体应该在函数的下面
+
+脚本退出应该有明确的exit status, 例如...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/05/26</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2018/11/07/understand-linux-shell-command-nohup/">
             
                 <span>理解linux命令 - nohup</span>
@@ -740,9 +790,60 @@ baz
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 18
+        Total : 19
         </div>
         <!-- search  -->
         
@@ -755,6 +856,11 @@ baz
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/26</span><a class="archive-post-title" href="/2019/05/26/bash脚本军规/">bash脚本军规</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -860,19 +966,19 @@ baz
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
+        <span class="sidebar-tag-name" data-tags="linux"><span class="iconfont-archer">&#xe606;</span>linux</span>
+    
         <span class="sidebar-tag-name" data-tags="tools"><span class="iconfont-archer">&#xe606;</span>tools</span>
+    
+        <span class="sidebar-tag-name" data-tags="golang"><span class="iconfont-archer">&#xe606;</span>golang</span>
     
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="python 正则"><span class="iconfont-archer">&#xe606;</span>python 正则</span>
     
-        <span class="sidebar-tag-name" data-tags="golang"><span class="iconfont-archer">&#xe606;</span>golang</span>
-    
         <span class="sidebar-tag-name" data-tags="python"><span class="iconfont-archer">&#xe606;</span>python</span>
     
         <span class="sidebar-tag-name" data-tags="programming"><span class="iconfont-archer">&#xe606;</span>programming</span>
-    
-        <span class="sidebar-tag-name" data-tags="linux"><span class="iconfont-archer">&#xe606;</span>linux</span>
     
         <span class="sidebar-tag-name" data-tags="MySQL"><span class="iconfont-archer">&#xe606;</span>MySQL</span>
     

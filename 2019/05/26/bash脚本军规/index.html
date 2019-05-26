@@ -24,7 +24,7 @@
     <meta name="description" content>
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>golang库——Viper源码分析 · Kongpingfan&#39;s Blog</title>
+    <title>bash脚本军规 · Kongpingfan&#39;s Blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -237,7 +237,7 @@
                 <a href="/">Pingfan&#39;s Blog</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">golang库——Viper源码分析</a>
+                <a href="#" class="post-name">bash脚本军规</a>
             </div>
     </div>
     
@@ -267,7 +267,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            golang库——Viper源码分析
+            bash脚本军规
             <!-- 404 -->
             
         </h1>
@@ -286,18 +286,18 @@ height:50vh;
                 
                     <div class="post-intro-tags">
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="golang">golang</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">2.8k</span>阅读时长: <span class="post-count reading-time">15 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">183</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2019/04/20</span>
+                    <span class="post-intro-time">2019/05/26</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -421,549 +421,51 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <p>Viper是非常好用的<code>加载配置</code>的golang库。源码分析如下：</p>
-<blockquote>
-<p>  分析思路，从一段使用的实际代码来分析一步步流程。</p>
-</blockquote>
-<pre><code class="go">func main() {
- v := viper.New()
- v.SetConfigName(&quot;config.development&quot;) // 配置文件名
- v.SetConfigType(&quot;json&quot;) // 配置文件的类型
- v.AddConfigPath(&quot;./config/&quot;) // 配置文件的路径
-
- if err := v.ReadInConfig(); err != nil {
-  fmt.Println(err)
- }
-
- fmt.Println(v.Get(&quot;port&quot;))
- fmt.Println(v.Get(&quot;password&quot;))
- fmt.Println(v.Get(&quot;student.age&quot;)) // 分析嵌套字段使用“.”即可，非常方便。
- fmt.Println(v.Get(&quot;student.hobby&quot;))
- fmt.Println(v.Get(&quot;non_exist&quot;)) // 不存在这个字段，返回nil
-}
-
+        <ol>
+<li><p>脚本以<code>shebang</code>开头。例如：</p>
+<pre><code class="bash"> #!/bin/bash
 </code></pre>
-<h2 id="新建struct并初始化"><a href="#新建struct并初始化" class="headerlink" title="新建struct并初始化"></a>新建struct并初始化</h2><p>Viper结构体定义如下：</p>
-<pre><code class="go">type Viper struct {
-    // Delimiter that separates a list of keys
-    // used to access a nested value in one go
-    keyDelim string
+</li>
+<li><p><code>shebang</code>下面紧跟一行注释，表示脚本的用途，例如：</p>
+<pre><code> # This script creates a backup of every MySQL database on the system. 
+</code></pre></li>
+</ol>
+<ol start="3">
+<li><p>下面紧跟全局变量声明，并赋值：</p>
+<pre><code> DEBUG=true 
+ HTML_DIR=/var/www 
+</code></pre></li>
+<li><p>函数应该注意使用局部变量，例如：</p>
+<pre><code> local GREETING=&quot;Hello!&quot; 
+</code></pre></li>
+</ol>
+<ol start="5">
+<li><p>所有函数声明放到上半部分，shell主体应该在函数的下面</p>
+</li>
+<li><p>脚本退出应该有明确的<code>exit status</code>, 例如:</p>
+<pre><code> exit 0 
+</code></pre><hr>
+</li>
+</ol>
+<p>模板如下：</p>
+<pre><code class="bash">#!/bin/bash 
+# 
+# &lt;Replace with the description and/or purpose of this shell script.&gt; 
 
-    // A set of paths to look for the config file in
-    configPaths []string
+GLOBAL_VAR1=&quot;one&quot; 
+GLOBAL_VAR2=&quot;two&quot; 
 
-    // The filesystem to read config from.
-    fs afero.Fs
+function function_one() { 
+  local LOCAL_VAR1=&quot;one&quot; 
+  # &lt;Replace with function code.&gt; 
+} 
 
-    // A set of remote providers to search for the configuration
-    remoteProviders []*defaultRemoteProvider
+# Main body of the shell script starts here. 
+# 
+# &lt;Replace with the main commands of your shell script.&gt; 
 
-    // Name of file to look for inside the path
-    configName        string
-    configFile        string
-    configType        string
-    configPermissions os.FileMode
-    envPrefix         string
-
-    automaticEnvApplied bool
-    envKeyReplacer      *strings.Replacer
-    allowEmptyEnv       bool
-
-    config         map[string]interface{}
-    override       map[string]interface{}
-    defaults       map[string]interface{}
-    kvstore        map[string]interface{}
-    pflags         map[string]FlagValue
-    env            map[string]string
-    aliases        map[string]string
-    typeByDefValue bool
-
-    // Store read properties on the object so that we can write back in order with comments.
-    // This will only be used if the configuration read is a properties file.
-    properties *properties.Properties
-
-    onConfigChange func(fsnotify.Event)
-}
-</code></pre>
-<p>新建一个结构体实例并初始化它：</p>
-<pre><code class="go">// New returns an initialized Viper instance.
-func New() *Viper {
-    v := new(Viper)
-    v.keyDelim = &quot;.&quot;
-    v.configName = &quot;config&quot;   // 默认文件名是config.xxx
-    v.configPermissions = os.FileMode(0644)
-    v.fs = afero.NewOsFs()  // 用于文件读写。
-    v.config = make(map[string]interface{})
-    v.override = make(map[string]interface{})
-    v.defaults = make(map[string]interface{})
-    v.kvstore = make(map[string]interface{})
-    v.pflags = make(map[string]FlagValue)
-    v.env = make(map[string]string)
-    v.aliases = make(map[string]string)
-    v.typeByDefValue = false
-
-    return v
-}
-</code></pre>
-<p>以后需要实例化的对象都可以使用这种思路来实现。</p>
-<p>想起了之前学到的<code>go实现constructor函数</code>，思路也是一模一样，不过可以自定义初始化的参数变量：</p>
-<pre><code class="go">package matrix
-function NewMatrix(rows, cols int) *matrix {
-    m := new(matrix)
-    m.rows = rows
-    m.cols = cols
-    m.elems = make([]float, rows*cols)
-    return m
-}
-</code></pre>
-<h2 id="设置配置的文件名和文件类型"><a href="#设置配置的文件名和文件类型" class="headerlink" title="设置配置的文件名和文件类型"></a>设置配置的文件名和文件类型</h2><pre><code class="go">// SetConfigName sets name for the config file.
-// Does not include extension.
-func SetConfigName(in string) { v.SetConfigName(in) }
-func (v *Viper) SetConfigName(in string) {
-    if in != &quot;&quot; {
-        v.configName = in
-        v.configFile = &quot;&quot;
-    }
-}
-</code></pre>
-<p>设置viper结构体的<code>configName</code>，<strong>不需要扩展名</strong></p>
-<pre><code class="go">// SetConfigType sets the type of the configuration returned by the
-// remote source, e.g. &quot;json&quot;.
-func SetConfigType(in string) { v.SetConfigType(in) }
-func (v *Viper) SetConfigType(in string) {
-    if in != &quot;&quot; {
-        v.configType = in
-    }
-}
-</code></pre>
-<p>设置文件的扩展名。</p>
-<h2 id="设置配置文件路径"><a href="#设置配置文件路径" class="headerlink" title="设置配置文件路径"></a>设置配置文件路径</h2><pre><code class="go">// AddConfigPath adds a path for Viper to search for the config file in.
-// Can be called multiple times to define multiple search paths.
-func AddConfigPath(in string) { v.AddConfigPath(in) }
-func (v *Viper) AddConfigPath(in string) {
-    if in != &quot;&quot; {
-        absin := absPathify(in)
-        jww.INFO.Println(&quot;adding&quot;, absin, &quot;to paths to search&quot;)
-        // 如果传入的路径不在configPaths里，则添加到这个数组里面。
-        if !stringInSlice(absin, v.configPaths) {
-            v.configPaths = append(v.configPaths, absin)
-        }
-    }
-}
-</code></pre>
-<p>首先调用了<code>absPathify</code>这个用户自定义函数，获取<strong>完整路径</strong>：</p>
-<pre><code class="go">func absPathify(inPath string) string {
-    jww.INFO.Println(&quot;Trying to resolve absolute path to&quot;, inPath)
-
-    // 如果类似于&#39;$HOME/hello/&#39;，则解析成具体的路径，例如&#39;/Users/kpf/hello&#39;
-    if strings.HasPrefix(inPath, &quot;$HOME&quot;) {
-        inPath = userHomeDir() + inPath[5:]
-    }
-
-    if strings.HasPrefix(inPath, &quot;$&quot;) {
-        end := strings.Index(inPath, string(os.PathSeparator))
-        inPath = os.Getenv(inPath[1:end]) + inPath[end:]
-    }
-
-    // IsAbs，对于&#39;/Users/kpff&#39;这种判断为true，即使它不存在，对于&#39;./kpf&#39;这种判断为false。
-    if filepath.IsAbs(inPath) {
-        return filepath.Clean(inPath)
-    }
-
-    // 如果是相对路径，则返回真实完整路径，例如传入`./config`，则返回的是‘当前运行文件目录+路径’
-    // 例如传入&#39;./config&#39;,返回的是‘/Users/kpf/Projects/go-src-learn/config’
-    p, err := filepath.Abs(inPath)
-    if err == nil {
-        return filepath.Clean(p)
-    }
-
-    jww.ERROR.Println(&quot;Couldn&#39;t discover absolute path&quot;)
-    jww.ERROR.Println(err)
-    return &quot;&quot;
-}
-
-func userHomeDir() string {
-    // 如果是在windows上运行。
-    if runtime.GOOS == &quot;windows&quot; {
-        home := os.Getenv(&quot;HOMEDRIVE&quot;) + os.Getenv(&quot;HOMEPATH&quot;)
-        if home == &quot;&quot; {
-            home = os.Getenv(&quot;USERPROFILE&quot;)
-        }
-        return home
-    }
-    return os.Getenv(&quot;HOME&quot;)
-}
-</code></pre>
-<p>如果传入的路径不在<code>configPaths</code>里，则添加到这个数组里面。</p>
-<p>…<code>stringInSlice</code>也是封装的函数。。</p>
-<pre><code class="go">func stringInSlice(a string, list []string) bool {
-    for _, b := range list {
-        if b == a {
-            return true
-        }
-    }
-    return false
-}
-
-</code></pre>
-<p>总结：这一步将传入的路径写到结构体的<code>configPaths</code>里面。</p>
-<h2 id="读取配置信息"><a href="#读取配置信息" class="headerlink" title="读取配置信息"></a>读取配置信息</h2><p>这一步是关键，将配置文件的信息读取到内存。</p>
-<pre><code class="go">// ReadInConfig will discover and load the configuration file from disk
-// and key/value stores, searching in one of the defined paths.
-func ReadInConfig() error { return v.ReadInConfig() }
-func (v *Viper) ReadInConfig() error {
-    jww.INFO.Println(&quot;Attempting to read in config file&quot;)
-    // getConfigFile：获取配置文件完整路径+文件名
-    filename, err := v.getConfigFile()
-    if err != nil {
-        return err
-    }
-    // 判断是否是支持的文件类型。
-    if !stringInSlice(v.getConfigType(), SupportedExts) {
-        return UnsupportedConfigError(v.getConfigType())
-    }
-
-    jww.DEBUG.Println(&quot;Reading file: &quot;, filename)
-    // 读取配置文件内容到file(file是个byte数组)
-    file, err := afero.ReadFile(v.fs, filename)
-    if err != nil {
-        return err
-    }
-
-    config := make(map[string]interface{})
-    // 将配置内容解析到map里。
-    err = v.unmarshalReader(bytes.NewReader(file), config)
-    if err != nil {
-        return err
-    }
-    // v的config参数 = config map
-    v.config = config
-    return nil
-}
-
-</code></pre>
-<p>首先是<code>getConfigFile</code>函数：</p>
-<pre><code class="go">func (v *Viper) getConfigFile() (string, error) {
-    if v.configFile == &quot;&quot; {
-        // 返回第一个查找到的配置文件路径。
-        cf, err := v.findConfigFile()
-        // 如果没找到，返回错误
-        if err != nil {
-            return &quot;&quot;, err
-        }
-        // 如果找到了，将v.configFile设置成找到的文件路径。
-        v.configFile = cf
-    }
-    return v.configFile, nil
-}
-
-</code></pre>
-<p>在前面配置文件名和文件扩展信息时，有一段代码将<code>configFile</code>设置为空，所以要重新生成<code>configFile</code>.</p>
-<p><code>findConfigFile</code>实现如下：</p>
-<pre><code class="go">// Search all configPaths for any config file.
-// Returns the first path that exists (and is a config file).
-func (v *Viper) findConfigFile() (string, error) {
-    jww.INFO.Println(&quot;Searching for config in &quot;, v.configPaths)
-    // 遍历configPaths
-    for _, cp := range v.configPaths {
-        file := v.searchInPath(cp)
-        // 如果找到了路径下确实存在该文件，则返回完整路径+文件名。
-        if file != &quot;&quot; {
-            return file, nil
-        }
-    }
-    // 没找到配置文件，抛出错误。
-    return &quot;&quot;, ConfigFileNotFoundError{v.configName, fmt.Sprintf(&quot;%s&quot;, v.configPaths)}
-}
-
-</code></pre>
-<pre><code class="go">// 传入一个路径(配置就在这个路径下面)
-// 返回
-func (v *Viper) searchInPath(in string) (filename string) {
-    jww.DEBUG.Println(&quot;Searching for config in &quot;, in)
-    for _, ext := range SupportedExts {
-
-        jww.DEBUG.Println(&quot;Checking for&quot;, filepath.Join(in, v.configName+&quot;.&quot;+ext))
-        // 一个一个的根据configName+ext来匹配。。如果存在该扩展名，则返回true
-        // 所以如果相同文件夹下面存在`a.json`和`a.toml`，那么`a.toml`就会被加载成`a.json`...
-        if b, _ := exists(v.fs, filepath.Join(in, v.configName+&quot;.&quot;+ext)); b {
-            jww.DEBUG.Println(&quot;Found: &quot;, filepath.Join(in, v.configName+&quot;.&quot;+ext))
-            return filepath.Join(in, v.configName+&quot;.&quot;+ext)
-        }
-    }
-
-    return &quot;&quot;
-}
-
-</code></pre>
-<p><code>SupportedExts</code>一开始就声明成一个全局数组：</p>
-<pre><code class="go">// SupportedExts are universally supported extensions.
-var SupportedExts = []string{&quot;json&quot;, &quot;toml&quot;, &quot;yaml&quot;, &quot;yml&quot;, &quot;properties&quot;, &quot;props&quot;, &quot;prop&quot;, &quot;hcl&quot;}
-
-</code></pre>
-<blockquote>
-<p>  附：自定义错误的实现:</p>
-<pre><code class="go">  // ConfigFileNotFoundError denotes failing to find configuration file.
-  type ConfigFileNotFoundError struct {
-      name, locations string
-  }
-
-  // Error returns the formatted configuration error.
-  func (fnfe ConfigFileNotFoundError) Error() string {
-      return fmt.Sprintf(&quot;Config File %q Not Found in %q&quot;, fnfe.name, fnfe.locations)
-  }
-
-</code></pre>
-</blockquote>
-<hr>
-<p>如果成功读取到配置文件，那么将它的所有内容加载到<code>file</code>变量中。</p>
-<p>现在最关键的一步是将file内容提取出来，做成<code>key-value</code>的map形式。实现这个功能的函数是<code>unmarshalReader</code></p>
-<h2 id="unmarshalReader"><a href="#unmarshalReader" class="headerlink" title="unmarshalReader"></a>unmarshalReader</h2><pre><code class="go">// Unmarshal a Reader into a map.
-// Should probably be an unexported function.
-func unmarshalReader(in io.Reader, c map[string]interface{}) error {
-    return v.unmarshalReader(in, c)
-}
-// 输入是一个加载好的文件内容和一个map。
-// 实现功能：将文件配置解析到map中。
-func (v *Viper) unmarshalReader(in io.Reader, c map[string]interface{}) error {
-    buf := new(bytes.Buffer)
-    buf.ReadFrom(in)
-
-    // 判断配置文件扩展名类型，进行不同处理。
-    switch strings.ToLower(v.getConfigType()) {
-    case &quot;yaml&quot;, &quot;yml&quot;:
-        if err := yaml.Unmarshal(buf.Bytes(), &amp;c); err != nil {
-            return ConfigParseError{err}
-        }
-
-    // 如果是json类型，调用json.Unmarshal函数。
-    case &quot;json&quot;:
-        if err := json.Unmarshal(buf.Bytes(), &amp;c); err != nil {
-            return ConfigParseError{err}
-        }
-
-    case &quot;hcl&quot;:
-        obj, err := hcl.Parse(string(buf.Bytes()))
-        if err != nil {
-            return ConfigParseError{err}
-        }
-        if err = hcl.DecodeObject(&amp;c, obj); err != nil {
-            return ConfigParseError{err}
-        }
-
-    // 如果是toml类型。调用toml.LoadReader和toMap函数。。
-    case &quot;toml&quot;:
-        tree, err := toml.LoadReader(buf)
-        if err != nil {
-            return ConfigParseError{err}
-        }
-        tmap := tree.ToMap()
-        for k, v := range tmap {
-            c[k] = v
-        }
-
-    case &quot;properties&quot;, &quot;props&quot;, &quot;prop&quot;:
-        v.properties = properties.NewProperties()
-        var err error
-        if v.properties, err = properties.Load(buf.Bytes(), properties.UTF8); err != nil {
-            return ConfigParseError{err}
-        }
-        for _, key := range v.properties.Keys() {
-            value, _ := v.properties.Get(key)
-            // recursively build nested maps
-            path := strings.Split(key, &quot;.&quot;)
-            lastKey := strings.ToLower(path[len(path)-1])
-            deepestMap := deepSearch(c, path[0:len(path)-1])
-            // set innermost value
-            deepestMap[lastKey] = value
-        }
-    }
-
-    insensitiviseMap(c)
-    return nil
-}
-
-</code></pre>
-<h2 id="获取配置信息"><a href="#获取配置信息" class="headerlink" title="获取配置信息"></a>获取配置信息</h2><p>之前的所有步骤都是为了实现将配置文件加载到<code>v.config</code>——一个map中。</p>
-<p>而v.config是一个私有变量，所以要访问它必须使用<code>getter</code>函数。</p>
-<p>viper中使用<code>Get</code>方法来实现：</p>
-<pre><code class="go">// 输入一个key，返回interface{}。
-// Get can retrieve any value given the key to use.
-// Get is case-insensitive for a key.
-// Get has the behavior of returning the value associated with the first
-// place from where it is set. Viper will check in the following order:
-// override, flag, env, config file, key/value store, default
-//
-// Get returns an interface. For a specific value use one of the Get____ methods.
-func Get(key string) interface{} { return v.Get(key) }
-func (v *Viper) Get(key string) interface{} {
-    lcaseKey := strings.ToLower(key)
-    // 调用find方法。
-    val := v.find(lcaseKey)
-    if val == nil {
-        return nil
-    }
-
-    if v.typeByDefValue {
-        // TODO(bep) this branch isn&#39;t covered by a single test.
-        valType := val
-        path := strings.Split(lcaseKey, v.keyDelim)
-        defVal := v.searchMap(v.defaults, path)
-        if defVal != nil {
-            valType = defVal
-        }
-
-        switch valType.(type) {
-        case bool:
-            return cast.ToBool(val)
-        case string:
-            return cast.ToString(val)
-        case int32, int16, int8, int:
-            return cast.ToInt(val)
-        case int64:
-            return cast.ToInt64(val)
-        case float64, float32:
-            return cast.ToFloat64(val)
-        case time.Time:
-            return cast.ToTime(val)
-        case time.Duration:
-            return cast.ToDuration(val)
-        case []string:
-            return cast.ToStringSlice(val)
-        }
-    }
-
-    return val
-}
-
-</code></pre>
-<p>find私有方法代码如下：</p>
-<pre><code class="go">// Given a key, find the value.
-// Viper will check in the following order:
-// flag, env, config file, key/value store, default.
-// Viper will check to see if an alias exists first.
-// Note: this assumes a lower-cased key given.
-func (v *Viper) find(lcaseKey string) interface{} {
-
-    var (
-        val    interface{}
-        exists bool
-        // 根据“.”来分割得到path
-        path   = strings.Split(lcaseKey, v.keyDelim)
-        // 如果path长度大于1，说明有“.”。是嵌套的key
-        nested = len(path) &gt; 1
-    )
-
-    // compute the path through the nested maps to the nested value
-    if nested &amp;&amp; v.isPathShadowedInDeepMap(path, castMapStringToMapInterface(v.aliases)) != &quot;&quot; {
-        return nil
-    }
-
-    // if the requested key is an alias, then return the proper key
-    lcaseKey = v.realKey(lcaseKey)
-    path = strings.Split(lcaseKey, v.keyDelim)
-    nested = len(path) &gt; 1
-
-    // Set() override first
-    val = v.searchMap(v.override, path)
-    if val != nil {
-        return val
-    }
-    if nested &amp;&amp; v.isPathShadowedInDeepMap(path, v.override) != &quot;&quot; {
-        return nil
-    }
-
-    // PFlag override next
-    flag, exists := v.pflags[lcaseKey]
-    if exists &amp;&amp; flag.HasChanged() {
-        switch flag.ValueType() {
-        case &quot;int&quot;, &quot;int8&quot;, &quot;int16&quot;, &quot;int32&quot;, &quot;int64&quot;:
-            return cast.ToInt(flag.ValueString())
-        case &quot;bool&quot;:
-            return cast.ToBool(flag.ValueString())
-        case &quot;stringSlice&quot;:
-            s := strings.TrimPrefix(flag.ValueString(), &quot;[&quot;)
-            s = strings.TrimSuffix(s, &quot;]&quot;)
-            res, _ := readAsCSV(s)
-            return res
-        default:
-            return flag.ValueString()
-        }
-    }
-    if nested &amp;&amp; v.isPathShadowedInFlatMap(path, v.pflags) != &quot;&quot; {
-        return nil
-    }
-
-    // Env override next
-    if v.automaticEnvApplied {
-        // even if it hasn&#39;t been registered, if automaticEnv is used,
-        // check any Get request
-        if val, ok := v.getEnv(v.mergeWithEnvPrefix(lcaseKey)); ok {
-            return val
-        }
-        if nested &amp;&amp; v.isPathShadowedInAutoEnv(path) != &quot;&quot; {
-            return nil
-        }
-    }
-    envkey, exists := v.env[lcaseKey]
-    if exists {
-        if val, ok := v.getEnv(envkey); ok {
-            return val
-        }
-    }
-    if nested &amp;&amp; v.isPathShadowedInFlatMap(path, v.env) != &quot;&quot; {
-        return nil
-    }
-
-    // Config file next
-    val = v.searchMapWithPathPrefixes(v.config, path)
-    if val != nil {
-        return val
-    }
-    if nested &amp;&amp; v.isPathShadowedInDeepMap(path, v.config) != &quot;&quot; {
-        return nil
-    }
-
-    // K/V store next
-    val = v.searchMap(v.kvstore, path)
-    if val != nil {
-        return val
-    }
-    if nested &amp;&amp; v.isPathShadowedInDeepMap(path, v.kvstore) != &quot;&quot; {
-        return nil
-    }
-
-    // Default next
-    val = v.searchMap(v.defaults, path)
-    if val != nil {
-        return val
-    }
-    if nested &amp;&amp; v.isPathShadowedInDeepMap(path, v.defaults) != &quot;&quot; {
-        return nil
-    }
-
-    // last chance: if no other value is returned and a flag does exist for the value,
-    // get the flag&#39;s value even if the flag&#39;s value has not changed
-    if flag, exists := v.pflags[lcaseKey]; exists {
-        switch flag.ValueType() {
-        case &quot;int&quot;, &quot;int8&quot;, &quot;int16&quot;, &quot;int32&quot;, &quot;int64&quot;:
-            return cast.ToInt(flag.ValueString())
-        case &quot;bool&quot;:
-            return cast.ToBool(flag.ValueString())
-        case &quot;stringSlice&quot;:
-            s := strings.TrimPrefix(flag.ValueString(), &quot;[&quot;)
-            s = strings.TrimSuffix(s, &quot;]&quot;)
-            res, _ := readAsCSV(s)
-            return res
-        default:
-            return flag.ValueString()
-        }
-    }
-    // last item, no need to check shadowing
-
-    return nil
-}
-
+# Exit with an explicit exit status. 
+exit 0 
 </code></pre>
 
     </article>
@@ -971,9 +473,9 @@ func (v *Viper) find(lcaseKey string) interface{} {
     
         <div class="license-wrapper">
             <p>原文作者：<a href="https://kongpingfan.me">平凡</a>
-            </p><p>原文链接：<a href="https://kongpingfan.me/2019/04/20/Viper源码分析/">https://kongpingfan.me/2019/04/20/Viper源码分析/</a>
-            </p><p>发表日期：<a href="https://kongpingfan.me/2019/04/20/Viper源码分析/">April 20th 2019, 3:36:47 pm</a>
-            </p><p>更新日期：<a href="https://kongpingfan.me/2019/04/20/Viper源码分析/">May 4th 2019, 6:52:03 pm</a>
+            </p><p>原文链接：<a href="https://kongpingfan.me/2019/05/26/bash脚本军规/">https://kongpingfan.me/2019/05/26/bash脚本军规/</a>
+            </p><p>发表日期：<a href="https://kongpingfan.me/2019/05/26/bash脚本军规/">May 26th 2019, 11:56:01 am</a>
+            </p><p>更新日期：<a href="https://kongpingfan.me/2019/05/26/bash脚本军规/">May 26th 2019, 11:57:27 am</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -981,17 +483,12 @@ func (v *Viper) find(lcaseKey string) interface{} {
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href="/2019/05/09/goland-five-skills/" title="goland加速开发的五个技巧">
-                    <div class="nextTitle">goland加速开发的五个技巧</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2019/04/14/GraphQL初探/" title="GraphQL初探">
-                    <div class="prevTitle">GraphQL初探</div>
+                <a href="/2019/05/09/goland-five-skills/" title="goland加速开发的五个技巧">
+                    <div class="prevTitle">goland加速开发的五个技巧</div>
                 </a>
             
         </li>
@@ -1126,7 +623,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#新建struct并初始化"><span class="toc-number">1.</span> <span class="toc-text">新建struct并初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#设置配置的文件名和文件类型"><span class="toc-number">2.</span> <span class="toc-text">设置配置的文件名和文件类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#设置配置文件路径"><span class="toc-number">3.</span> <span class="toc-text">设置配置文件路径</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#读取配置信息"><span class="toc-number">4.</span> <span class="toc-text">读取配置信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#unmarshalReader"><span class="toc-number">5.</span> <span class="toc-text">unmarshalReader</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#获取配置信息"><span class="toc-number">6.</span> <span class="toc-text">获取配置信息</span></a></li></ol>
+        
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
