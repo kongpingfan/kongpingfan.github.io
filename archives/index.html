@@ -366,6 +366,51 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2019/05/26/bash-programming-case-statement/">
+            
+                <span>linux bash——详解case关键字</span>
+        </a>
+        <div class="abstract-content">
+            通用语法case语句相当于其他语言的switch，如果if对同一个变量要判断很多种情况，可以用case语句来写。
+通用语法如下：
+case &quot;$VAR&quot; in 
+    pattern_1)
+        # Commands go here.
+           ;;
+    pattern_N)
+        # Commands go here.
+        ;;
+esac
+
+
+双分号;;表示终止case语句执行。类似于其他编程语言的break关键字。
+
+例如对于ssh start和ssh stop:
+case &quot;$1&quot; in
+  ...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/05/26</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2019/05/26/bash脚本军规/">
             
                 <span>bash脚本军规</span>
@@ -728,43 +773,6 @@ def f(x):
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2018/10/01/python-decorator/">
-            
-                <span>python的装饰器</span>
-        </a>
-        <div class="abstract-content">
-            
-翻译自：https://www.programiz.com/python-programming/decorator
-
-
-
-装饰器接收一个函数，为其加入一些功能并返回它。它又叫作元类编程，因为一部分程序在运行时尝试修改另外一部分程序。
-
-简单说来，装饰器像一个包裹，不用更改这个函数自身，改变原函数代码的功能(增强了它原来的功能)。就像一包月饼卖10块钱，我们给它套上精致华丽骚气而浮夸的包装盒，瞬间能卖上千了有木有，但月饼还是原来的月饼，并没有任何改变。
-前置知识我们必须习惯，在python中，任何东西都是对象。名字只是指向这些对象的一个标识。函数也不例外，它们也是带有属性的对象，不同的...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/10/01</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="python">python</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
     
     <nav class="page-nav">
@@ -1110,22 +1118,9 @@ def f(x):
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 19
+        Total : 20
         </div>
         <!-- search  -->
         
@@ -1138,6 +1133,11 @@ def f(x):
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/26</span><a class="archive-post-title" href="/2019/05/26/bash-programming-case-statement/">linux bash——详解case关键字</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1252,9 +1252,9 @@ def f(x):
     
         <span class="sidebar-tag-name" data-tags="tools"><span class="iconfont-archer">&#xe606;</span>tools</span>
     
-        <span class="sidebar-tag-name" data-tags="golang"><span class="iconfont-archer">&#xe606;</span>golang</span>
-    
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
+    
+        <span class="sidebar-tag-name" data-tags="golang"><span class="iconfont-archer">&#xe606;</span>golang</span>
     
         <span class="sidebar-tag-name" data-tags="python 正则"><span class="iconfont-archer">&#xe606;</span>python 正则</span>
     
