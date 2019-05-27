@@ -24,7 +24,7 @@
     <meta name="description" content>
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>关于 · Kongpingfan&#39;s Blog</title>
+    <title>Kongpingfan&#39;s Blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -79,8 +79,6 @@
 
     <link rel="preload" href="/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="stylesheet" href="/css/mobile.css?v=20180824" media="(max-width: 980px)">
-    
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
@@ -223,10 +221,10 @@
 </head>
 
     
-        <body class="about-body">
+        <body class="home-body">
     
     
-<header class="header">
+<header class="header index-header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
@@ -249,20 +247,27 @@ height:50vh;
     <!-- 主页  -->
     
     
+    <!-- 文章页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/intro/about-bg.jpg)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/index-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            关于
+            Pingfan's Blog
+            <!-- 文章页  -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
+            
+            
+                The quieter you become, the more you are able to hear.
+            
+            <!-- 文章页  -->
             
         </p>
         <!-- 文章页meta -->
@@ -366,20 +371,144 @@ height:50vh;
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <!-- 不可以删除，否则会调用post的layout  -->
-<main class="main about-page">
-    <article class="article-entry">
-        <h1 id="关于我"><a href="#关于我" class="headerlink" title="关于我"></a>关于我</h1><ul>
-<li>毕业于华中科技大学计算机科学与技术学院</li>
-<li><p>目前就职于百度</p>
-</li>
-<li><p>QQ : 2693438633</p>
-</li>
-</ul>
-
+            <main class="main index-page">
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2018/05/05/ciscn-2018-writeup/">
+            
+                <span>ciscn 2018 第十一届全国大学生信息安全竞赛writeup</span>
+        </a>
+        <div class="abstract-content">
+            前言渣渣队伍，拿了个华中第五。pwn、re和apk一道没做出来……
+Webeasyweb题目链接：http://114.116.26.217/登进去是一个登录界面
+垃圾题目，一开始环境都出错，注册不了，对着题目撸了半个小时无果。后来发了个公告修复了。说出来你可能不信，这道题我是这样做出来的——注册一个普通用户，登录后提示没有管理员权限，看来肯定是要用admin的身份登录了啊。于是我用admin+admin登录，没想到成功了……（过了一会儿使用admin+admin就登不了，提示密码错误），然后匆匆的截了个图：看到没，直接出flag，然而用这个提交死活不对。我想难道是思路不对，看cooki...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/05/05</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="ctf writeup">ctf writeup</a>
+    
+</div>
+            
+        </div>
     </article>
+    
+    <!-- paginator  -->
+    
+    <nav class="page-nav">
+        <a class="extend prev" rel="prev" href="/page/2/">&#60; PREV</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+    </nav>
+    
 </main>
             <!-- profile -->
+            
+            <div class="profile">
+    <img class="profile-avatar" alt="avatar" src="/avatar/myProfile.jpg">
+    <div class="profile-name">平凡</div>
+    
+    <div class="profile-signature">
+        Nothing is true, everything is permitted.
+    </div>
+    
+    
+    <div class="profile-social">
+        
+    
+        
+            
+                <a href="mailto:admin@kongpingfan.com" class="iconfont-archer email" title="email"></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/kongpingfan" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title="wechat">
+                  
+                  <img class="profile-qr" src="/assets/qrcode.jpg">
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    
+        <div class="friends">
+            <div>FRIENDS</div>
+            
+                
+                    <span>
+                        <a href="//www.baidu.com" target="_black">friendA</a>
+                    </span>
+                
+            
+                
+                    <span>
+                        <a href="//www.google.com" target="_black">friendB</a>
+                    </span>
+                
+            
+                
+            
+        </div>
+    
+    
+        <div class="about-me">
+            <a href="/about">ABOUT ME</a>
+        </div>
+    
+</div>
             
         </div>
         <footer class="footer footer-unloaded">

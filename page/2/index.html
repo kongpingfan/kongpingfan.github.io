@@ -379,6 +379,46 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2018/10/03/python-functools-wraps/">
+            
+                <span>python的@functools.wraps</span>
+        </a>
+        <div class="abstract-content">
+            前言如果你经常与python的装饰器打交道，会发现有的代码里经常会有这样一行@wraps(xxx)
+from functools import wraps
+def logged(func):
+    @wraps(func)
+    def with_logging(*args, **kwargs):
+        print func.__name__ + &quot; was called&quot;
+        return func(*args, **kwargs)
+    return with_logging
+
+@logged
+def f(x):
+   &quot;&q...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/10/03</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="python">python</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2018/10/01/python-decorator/">
             
                 <span>python的装饰器</span>
@@ -720,41 +760,10 @@ http://117.34.116.192/index.php?file=../../../../etc/passwd
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2018/05/05/ciscn-2018-writeup/">
-            
-                <span>ciscn 2018 第十一届全国大学生信息安全竞赛writeup</span>
-        </a>
-        <div class="abstract-content">
-            前言渣渣队伍，拿了个华中第五。pwn、re和apk一道没做出来……
-Webeasyweb题目链接：http://114.116.26.217/登进去是一个登录界面
-垃圾题目，一开始环境都出错，注册不了，对着题目撸了半个小时无果。后来发了个公告修复了。说出来你可能不信，这道题我是这样做出来的——注册一个普通用户，登录后提示没有管理员权限，看来肯定是要用admin的身份登录了啊。于是我用admin+admin登录，没想到成功了……（过了一会儿使用admin+admin就登不了，提示密码错误），然后匆匆的截了个图：看到没，直接出flag，然而用这个提交死活不对。我想难道是思路不对，看cooki...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/05/05</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="ctf writeup">ctf writeup</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
     
     <nav class="page-nav">
-        <a class="extend prev" rel="prev" href="/">&#60; PREV</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+        <a class="extend prev" rel="prev" href="/">&#60; PREV</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">NEXT &#62;</a>
     </nav>
     
 </main>
@@ -1193,9 +1202,24 @@ Webeasyweb题目链接：http://114.116.26.217/登进去是一个登录界面
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 20
+        Total : 21
         </div>
         <!-- search  -->
         
@@ -1208,6 +1232,11 @@ Webeasyweb题目链接：http://114.116.26.217/登进去是一个登录界面
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/27</span><a class="archive-post-title" href="/2019/05/27/Gogs-docker-deploy/">Gogs在docker下的部署</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1255,12 +1284,12 @@ Webeasyweb题目链接：http://114.116.26.217/登进去是一个登录界面
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/07</span><a class="archive-post-title" href="/2018/11/07/understand-linux-shell-command-nohup/">理解linux命令 - nohup</a>
+            <span class="archive-post-date">11/07</span><a class="archive-post-title" href="/2018/11/07/understand-linux-shell-2-1/">理解linux命令 - 2>&1</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/07</span><a class="archive-post-title" href="/2018/11/07/understand-linux-shell-2-1/">理解linux命令 - 2>&1</a>
+            <span class="archive-post-date">11/07</span><a class="archive-post-title" href="/2018/11/07/understand-linux-shell-command-nohup/">理解linux命令 - nohup</a>
         </li>
     
     
@@ -1322,6 +1351,8 @@ Webeasyweb题目链接：http://114.116.26.217/登进去是一个登录界面
   </div>
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
     
         <span class="sidebar-tag-name" data-tags="linux"><span class="iconfont-archer">&#xe606;</span>linux</span>
     

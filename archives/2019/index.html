@@ -366,6 +366,45 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2019/05/27/Gogs-docker-deploy/">
+            
+                <span>Gogs在docker下的部署</span>
+        </a>
+        <div class="abstract-content">
+            下载镜像及启动容器# Pull image from Docker Hub.
+$ docker pull gogs/gogs
+
+# 创建一个卷用于存储数据
+$ mkdir -p /var/gogs
+
+# 第一次启动
+$ docker run -itd --name=gogs -p 10022:22 -p 10080:3000 -v /var/gogs:/data gogs/gogs
+
+# 第二种方式，使用docker volume：
+$ docker run --name=gogs -p 10022:22 -p 10080:3000 -v gogs-data:/data gogs/gog...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/05/27</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2019/05/26/bash-programming-case-statement/">
             
                 <span>linux bash——详解case关键字</span>
@@ -905,9 +944,24 @@ Getting started学习GraphQL，需要有GraphQL的服务端。
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 20
+        Total : 21
         </div>
         <!-- search  -->
         
@@ -920,6 +974,11 @@ Getting started学习GraphQL，需要有GraphQL的服务端。
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/27</span><a class="archive-post-title" href="/2019/05/27/Gogs-docker-deploy/">Gogs在docker下的部署</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -967,12 +1026,12 @@ Getting started学习GraphQL，需要有GraphQL的服务端。
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/07</span><a class="archive-post-title" href="/2018/11/07/understand-linux-shell-command-nohup/">理解linux命令 - nohup</a>
+            <span class="archive-post-date">11/07</span><a class="archive-post-title" href="/2018/11/07/understand-linux-shell-2-1/">理解linux命令 - 2>&1</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">11/07</span><a class="archive-post-title" href="/2018/11/07/understand-linux-shell-2-1/">理解linux命令 - 2>&1</a>
+            <span class="archive-post-date">11/07</span><a class="archive-post-title" href="/2018/11/07/understand-linux-shell-command-nohup/">理解linux命令 - nohup</a>
         </li>
     
     
@@ -1034,6 +1093,8 @@ Getting started学习GraphQL，需要有GraphQL的服务端。
   </div>
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
     
         <span class="sidebar-tag-name" data-tags="linux"><span class="iconfont-archer">&#xe606;</span>linux</span>
     
