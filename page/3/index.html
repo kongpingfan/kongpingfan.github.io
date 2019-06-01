@@ -379,6 +379,81 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2018/08/23/python_three_kinds_of_methods/">
+            
+                <span>python的类方法、实例方法和静态方法</span>
+        </a>
+        <div class="abstract-content">
+            概览让我们写一个类，包含类中的三种方法（instance method、class method、static method）
+class MyClass:
+    def method(self):
+        return &quot;instance method called&quot;, self
+
+
+    @classmethod
+    def classmethod(cls):
+        return &quot;class method called&quot;,cls
+
+    @ staticmethod
+    def staticmthod():
+ ...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/08/23</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="python">python</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2018/05/14/the_4th_cstc_writeup/">
+            
+                <span>第四届全国网络空间安全技术大赛 writeup</span>
+        </a>
+        <div class="abstract-content">
+            web2进去后url如下：
+http://117.34.116.192/index.php?file=login.html
+这道题一看url格式，便考虑到PHP文件包含。但是使用php://filter和php://input进行测试的时候，发现“：”被过滤了。于是一套乱摸，倒是摸到了两个敏感文件：
+http://117.34.116.192/index.php?file=../../../../etc/apache2/apache2.conf
+http://117.34.116.192/index.php?file=../../../../etc/passwd
+都能读出来，但没什么用，...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/05/14</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="ctf writeup">ctf writeup</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2018/05/05/ciscn-2018-writeup/">
             
                 <span>ciscn 2018 第十一届全国大学生信息安全竞赛writeup</span>
@@ -857,13 +932,9 @@ Webeasyweb题目链接：http://114.116.26.217/登进去是一个登录界面
     
     
     
-    
-    
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 21
+        Total : 23
         </div>
         <!-- search  -->
         
@@ -876,6 +947,16 @@ Webeasyweb题目链接：http://114.116.26.217/登进去是一个登录界面
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href="/2019/06/01/bash-function-return-code/">bash编程——函数的return code</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href="/2019/06/01/bash-function-return-code-1/">bash编程——函数的return code</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1002,9 +1083,9 @@ Webeasyweb题目链接：http://114.116.26.217/登进去是一个登录界面
     
         <span class="sidebar-tag-name" data-tags="tools"><span class="iconfont-archer">&#xe606;</span>tools</span>
     
-        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
-    
         <span class="sidebar-tag-name" data-tags="golang"><span class="iconfont-archer">&#xe606;</span>golang</span>
+    
+        <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
         <span class="sidebar-tag-name" data-tags="python 正则"><span class="iconfont-archer">&#xe606;</span>python 正则</span>
     

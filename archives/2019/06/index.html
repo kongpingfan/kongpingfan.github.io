@@ -24,7 +24,7 @@
     <meta name="description" content>
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>python日志记录模块 · Kongpingfan&#39;s Blog</title>
+    <title>Kongpingfan&#39;s Blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -223,23 +223,12 @@
 </head>
 
     
-        <body class="post-body">
-    
     
 <header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
     <!-- post页的toggle banner  -->
-    
-    <div class="banner">
-            <div class="blog-title">
-                <a href="/">Pingfan&#39;s Blog</a>
-            </div>
-            <div class="post-title">
-                <a href="#" class="post-name">python日志记录模块</a>
-            </div>
-    </div>
     
     <a class="home-link" href="/">Pingfan's Blog</a>
 </header>
@@ -251,74 +240,24 @@
 
 
 
-
-height:50vh;
 ">
     
     <!-- 主页  -->
-    
-    
-    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-img" style="background-image: url(/)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
-            
-            python日志记录模块
-            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
-            
-            <!-- 404 -->
-            
         </p>
         <!-- 文章页meta -->
-        
-            <div class="post-intros">
-                <!-- 文章页标签  -->
-                
-                    <div class="post-intro-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="python">python</a>
-    
-</div>
-                
-                
-                    <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">2k</span>阅读时长: <span class="post-count reading-time">9 min</span></span>
-                    </div>
-                
-                <div class="post-intro-meta">
-                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2018/11/15</span>
-                    
-                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
-                        <span class="iconfont-archer">&#xe602;</span>
-                        <span id="busuanzi_value_page_pv"></span>
-                    </span>
-                    
-                    <span class="shareWrapper">
-                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
-                        <span class="shareText">Share</span>
-                        <ul class="shareList">
-                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
-                                <div class="share-qrcode"></div>
-                            </li>
-                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
-                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
-                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
-                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
-                        </ul>
-                    </span>
-                </div>
-            </div>
         
     </div>
 </div>
@@ -419,286 +358,92 @@ height:50vh;
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main post-page">
-    <article class="article-entry">
-        <h2 id="为什么要记录日志"><a href="#为什么要记录日志" class="headerlink" title="为什么要记录日志"></a>为什么要记录日志</h2><ul>
-<li><p>它可以让你更好的理解程序的运行流程，甚至帮你发现你在开发时没有考虑到的细节。</p>
-</li>
-<li><p>持续监控程序的运行，存储用户名、IP等信息。</p>
-</li>
-<li><p>如果程序出错，在出错之前所有的信息都会被记录下来，效果堪比调试。</p>
-</li>
-<li><p>可以通过日志数据分析应用的性能，如瓶颈在哪；也可以利用它做市场优化。</p>
-</li>
-</ul>
-<h2 id="日志模块"><a href="#日志模块" class="headerlink" title="日志模块"></a>日志模块</h2><p>python在标准库里提供了日志记录功能。大部分python的三方库都使用了这个模块</p>
-<p>总共有五个级别，从低到高分别为：</p>
-<ul>
-<li>DEBUG</li>
-<li>INFO</li>
-<li>WARNING</li>
-<li>ERROR</li>
-<li>CRITICAL</li>
-</ul>
-<p>例如：</p>
-<pre><code>import logging
-
-logging.debug(&#39;This is a debug message&#39;)
-logging.info(&#39;This is an info message&#39;)
-logging.warning(&#39;This is a warning message&#39;)
-logging.error(&#39;This is an error message&#39;)
-logging.critical(&#39;This is a critical message&#39;)
-</code></pre><p>输出为：</p>
-<pre><code>WARNING:root:This is a warning message
-ERROR:root:This is an error message
-CRITICAL:root:This is a critical message
-</code></pre><p>首先输出的是日志的严重级别，接着是一个<code>root</code>，这是默认日志的名字。后面就是错误的具体信息了。默认格式为：<code>level:name:message</code>，当然这个格式可以自定义，例如加上<strong>时间戮，行数</strong>等信息。</p>
-<p>我们发现<code>debug(), info()</code>的信息没有被输出，这是由于<strong>默认的日志记录级别是<code>WARNING</code>及以上</strong>。可以配置这个级别，但不推荐这么做，因为这会与你使用的三方库起冲突。</p>
-<h2 id="基本配置"><a href="#基本配置" class="headerlink" title="基本配置"></a>基本配置</h2><p>可以使用<code>basicConfig(***kwargs*)</code>方法来配置日志功能</p>
-<blockquote>
-<p>可以看到这个方法违背了PEP8的命令规则（本来应该为<code>basic_config</code>）,这是因为它借鉴了Java的Log4j库。在成为标准库之前，它就被许多开发者使用，如果将它重构成符合PEP8规范，可能会带来许多兼容性问题。</p>
-</blockquote>
-<p>它主要有四个参数：</p>
-<ul>
-<li><code>level</code>：设置默认的错误等级。</li>
-<li><code>filename</code>：输出日志的名称</li>
-<li><code>filemode</code>：必须指定<code>filename</code>，默认是<code>a</code>(append)模式.</li>
-<li><code>format</code>：日志的输出格式</li>
-</ul>
-<p><code>level</code>设定好后，级别等于或高于该值会被记录：</p>
-<pre><code>import logging
-
-logging.basicConfig(level=logging.DEBUG)
-logging.debug(&#39;This will get logged&#39;)
-DEBUG:root:This will get logged
-</code></pre><p>所有等于或高于 <code>DEBUG</code> 的日志将会被记录。</p>
-<p>默认是将信息打印在控制台，也可以使用<code>filename</code>和<code>filemode</code>参数将日志保存到文件中；使用<code>format</code>参数来控制输出格式，下面是一个例子：</p>
-<pre><code>import logging
-
-logging.basicConfig(filename=&#39;app.log&#39;, filemode=&#39;w&#39;, format=&#39;%(name)s - %(levelname)s - %(message)s&#39;)
-logging.warning(&#39;This will get logged to a file&#39;)
-root - ERROR - This will get logged to a file
-</code></pre><p><strong>注意，<code>basicConfig()</code>只能被调用一次！！</strong></p>
-<h2 id="格式化输出"><a href="#格式化输出" class="headerlink" title="格式化输出"></a>格式化输出</h2><p>如果你想记录进程的ID：</p>
-<pre><code>import logging
-
-logging.basicConfig(format=&#39;%(process)d-%(levelname)s-%(message)s&#39;)
-logging.warning(&#39;This is a Warning&#39;)
-18472-WARNING-This is a Warning
-</code></pre><p>如果你想<strong>记录时间</strong>：</p>
-<pre><code>import logging
-
-logging.basicConfig(format=&#39;%(asctime)s - %(message)s&#39;, level=logging.INFO)
-logging.info(&#39;Admin logged in&#39;)
-2018-07-11 20:12:06,288 - Admin logged in
-</code></pre><p><code>%(asctime)s</code> 指定了日志的记录时间，当然这个日期的格式可以通过<code>datafmt</code>来更改，它的格式和<code>time.strftime()</code>的格式一样：</p>
-<pre><code>import logging
-
-logging.basicConfig(format=&#39;%(asctime)s - %(message)s&#39;, datefmt=&#39;%d-%b-%y %H:%M:%S&#39;)
-logging.warning(&#39;Admin logged out&#39;)
-12-Jul-18 20:53:19 - Admin logged out
-</code></pre><ul>
-<li>时间格式的文档：<a href="https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior" target="_blank" rel="noopener">https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior</a></li>
-</ul>
-<h2 id="记录变量的数据"><a href="#记录变量的数据" class="headerlink" title="记录变量的数据"></a>记录变量的数据</h2><p>通过传入变量，可以记录下变量的信息：</p>
-<pre><code>import logging
-
-name = &#39;John&#39;
-
-logging.error(&#39;%s raised an error&#39;, name)
-ERROR:root:John raised an error
-</code></pre><p>可以使用python3.6的 <a href="https://realpython.com/python-f-strings/" target="_blank" rel="noopener">f-strings</a> 来格式化字符串：</p>
-<pre><code>import logging
-
-name = &#39;John&#39;
-
-logging.error(f&#39;{name} raised an error&#39;)
-ERROR:root:John raised an error
-</code></pre><h2 id="记录堆栈信息"><a href="#记录堆栈信息" class="headerlink" title="记录堆栈信息"></a>记录堆栈信息</h2><p>日志模块也可以记录堆栈信息，异常信息可能通过指定<code>exc_info=True</code>来记录。例如：</p>
-<pre><code>import logging
-
-a = 5
-b = 0
-
-try:
-  c = a / b
-except Exception as e:
-  logging.error(&quot;Exception occurred&quot;, exc_info=True)
-ERROR:root:Exception occurred
-Traceback (most recent call last):
-  File &quot;exceptions.py&quot;, line 6, in &lt;module&gt;
-    c = a / b
-ZeroDivisionError: division by zero
-[Finished in 0.2s]
-</code></pre><p>如果<code>exc_info</code>没有设置成<code>True</code>，上面程序的异常就不会被记录，日志只有一行：</p>
-<pre><code>ERROR:root:Exception occurred
-</code></pre><p>在异常处理模块可以调用<code>logging.exception()</code>方法，默认级别是<code>ERROR</code>，它等效于<code>logging.error(exc_info=True)</code>，但它只应在异常处理模块中被调用：</p>
-<pre><code>import logging
-
-a = 5
-b = 0
-try:
-  c = a / b
-except Exception as e:
-  logging.exception(&quot;Exception occurred&quot;)
-ERROR:root:Exception occurred
-Traceback (most recent call last):
-  File &quot;exceptions.py&quot;, line 6, in &lt;module&gt;
-    c = a / b
-ZeroDivisionError: division by zero
-[Finished in 0.2s]
-</code></pre><h2 id="类和函数"><a href="#类和函数" class="headerlink" title="类和函数"></a>类和函数</h2><p>当日志模块被直接调用，如<code>loggin.debug()</code>，日志的默认<code>name</code>为<code>root</code>。可以通过创建<code>Logger</code>类来自定义属于自己的logger，特别是当你的应用有很多模块时（不然全都使用root，都不知道是哪个模块输出的日志了，一锅搅在一起让你头大）。</p>
-<p>可以使用<code>logging.getLogger(name)</code>方法来指定logger的名称，例如：</p>
-<pre><code>import logging
-
-logger = logging.getLogger(&#39;example_logger&#39;)
-logger.warning(&#39;This is a warning&#39;)
-This is a warning
-</code></pre><p>当我们在它的配置中传入name时，它会这样输出：</p>
-<pre><code>WARNING:example_logger:This is a warning
-</code></pre><p>和root logger不一样，这种logger不能使用<code>basicConfig()</code>方法来配置，而是使用Handlers和Formatters。</p>
-<h2 id="使用Handlers"><a href="#使用Handlers" class="headerlink" title="使用Handlers"></a>使用Handlers</h2><p>如果想配置logger并将日志发送到不同的位置，就可以使用handlers，它可以将日志信息输出到一个文件、http流或者SMTP邮件。一个logger可以有多个handler，例如同时保存到日志文件和以邮件形式发送。</p>
-<p>可以指定handler的严重等级，当为一个logger设置多个handler时会非常有用，例如将<code>WARNING</code>以上级别的日志输出到控制台，将<code>ERROR</code>以上的日志输出到文件：</p>
-<pre><code># logging_example.py
-
-import logging
-
-# Create a custom logger
-logger = logging.getLogger(__name__)
-
-# Create handlers
-c_handler = logging.StreamHandler() # 这里的c指console
-f_handler = logging.FileHandler(&#39;file.log&#39;) # f指file
-c_handler.setLevel(logging.WARNING)
-f_handler.setLevel(logging.ERROR)
-
-# Create formatters and add it to handlers
-c_format = logging.Formatter(&#39;%(name)s - %(levelname)s - %(message)s&#39;)
-f_format = logging.Formatter(&#39;%(asctime)s - %(name)s - %(levelname)s - %(message)s&#39;)
-c_handler.setFormatter(c_format)
-f_handler.setFormatter(f_format)
-
-# Add handlers to the logger
-logger.addHandler(c_handler)
-logger.addHandler(f_handler)
-
-logger.warning(&#39;This is a warning&#39;)
-logger.error(&#39;This is an error&#39;)
-__main__ - WARNING - This is a warning
-__main__ - ERROR - This is an error
-</code></pre><p>当<code>logger.warning()</code>创建了一条日志记录，会同时发送到<code>c_handler</code>和<code>f_handler</code>这两个handler，<code>c_handler</code>是一个<code>StreamHandler</code>，它的级别是<code>WARNING</code>，所以它会将日志信息输出到控制台，而<code>f_handler</code>是一个<code>FileHandler</code>，它的级别是<code>ERROR</code>，所以它会<strong>忽略</strong>这条日志记录。当<code>logger.error()</code>产生日志记录时，两个handler都会处理，其中<code>f_handler</code>会写入日志文件：</p>
-<pre><code>2018-08-03 16:12:21,723 - __main__ - ERROR - This is an error
-</code></pre><p>由于logger是当前脚本运行，所以<code>__name__</code>为<code>__main__</code>，如果文件被外部模块引入，那么<code>__name__</code>为文件名<code>logging_example</code>：</p>
-<pre><code># run.py
-
-import logging_example
-logging_example - WARNING - This is a warning
-logging_example - ERROR - This is an error
-</code></pre><h2 id="其他配置方法"><a href="#其他配置方法" class="headerlink" title="其他配置方法"></a>其他配置方法</h2><p>可以把配置写到文件或者字典中，然后通过<code>fileConfig()</code>或<code>dictConfgi()</code>来加载配置。这非常适合于在运行时更改日志配置。下面是将配置写到文件的例子：</p>
-<pre><code>[loggers]
-keys=root,sampleLogger
-
-[handlers]
-keys=consoleHandler
-
-[formatters]
-keys=sampleFormatter
-
-[logger_root]
-level=DEBUG
-handlers=consoleHandler
-
-[logger_sampleLogger]
-level=DEBUG
-handlers=consoleHandler
-qualname=sampleLogger
-propagate=0
-
-[handler_consoleHandler]
-class=StreamHandler
-level=DEBUG
-formatter=sampleFormatter
-args=(sys.stdout,)
-
-[formatter_sampleFormatter]
-format=%(asctime)s - %(name)s - %(levelname)s - %(message)s
-</code></pre><p>上面的文件中，有两个logger，一个handler，一个fomatter。他们的名字定义好后，以下划线形式说明进行具体的配置，如<code>logger_root、logger_sampleLogger、handler_consoleHandler、formatter_sampleFormatter</code></p>
-<p>为了加载这个配置文件，需要使用<code>fileConfig()</code>函数：</p>
-<pre><code>import logging
-import logging.config
-
-logging.config.fileConfig(fname=&#39;file.conf&#39;, disable_existing_loggers=False)
-
-# Get the logger specified in the file
-logger = logging.getLogger(__name__)
-
-logger.debug(&#39;This is a debug message&#39;)
-2018-07-13 13:57:45,467 - __main__ - DEBUG - This is a debug message
-</code></pre><p><code>disable_existing_loggers</code>用开决定是否弃用掉当前已经开启的logger，<strong>如果未声明这个参数，默认情况下是<code>True</code></strong>。</p>
-<h2 id="认真分析你的日志"><a href="#认真分析你的日志" class="headerlink" title="认真分析你的日志"></a>认真分析你的日志</h2><p>你可以根据项目需要自定义你的日志类。如果使用得当，日志会让你的开发过程规避掉不少坑，让你的开发能力更上一层楼。</p>
-<p><strong>原文</strong></p>
-<p><a href="https://realpython.com/python-logging/" target="_blank" rel="noopener">https://realpython.com/python-logging/</a></p>
-
-    </article>
-    <!-- license  -->
+            <main class="main index-page">
     
-        <div class="license-wrapper">
-            <p>原文作者：<a href="https://kongpingfan.me">平凡</a>
-            </p><p>原文链接：<a href="https://kongpingfan.me/2018/11/15/python-logging-module/">https://kongpingfan.me/2018/11/15/python-logging-module/</a>
-            </p><p>发表日期：<a href="https://kongpingfan.me/2018/11/15/python-logging-module/">November 15th 2018, 10:57:12 pm</a>
-            </p><p>更新日期：<a href="https://kongpingfan.me/2018/11/15/python-logging-module/">May 4th 2019, 6:52:03 pm</a>
-            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2019/06/01/bash-function-return-code-1/">
+            
+                <span>bash编程——函数的return code</span>
+        </a>
+        <div class="abstract-content">
+            显示返回：return &lt;RETURN_CODE&gt;
+隐式返回：如果不指定，则默认以函数体最后一行的执行结果作为返回
+返回的code在1-255之间。
+其中0=success。
+可以使用$？来获取函数执行的结果来进行判断。
+例如下面的备份函数（功能：传入要备份的文件路径，将文件备份到/tmp目录下）
+#!/usr/bin/env bash
+
+backup_file() {
+    if [[ -f $1 ]] # 检测$1是不是已存在的文件
+    then
+        # basename 将前面的路径都剔除，只保留文件名
+        # $$表示pid（正在运行当前...
         </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/06/01</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href="/2019/06/01/bash-function-return-code/">
+            
+                <span>bash编程——函数的return code</span>
+        </a>
+        <div class="abstract-content">
+            显示返回：return &lt;RETURN_CODE&gt;
+隐式返回：如果不指定，则默认以函数体最后一行的执行结果作为返回
+返回的code在1-255之间。
+其中0=success。
+可以使用$？来获取函数执行的结果来进行判断。
+例如下面的备份函数（功能：传入要备份的文件路径，将文件备份到/tmp目录下）
+#!/usr/bin/env bash
+
+backup_file() {
+    if [[ -f $1 ]] # 检测$1是不是已存在的文件
+    then
+        # basename 将前面的路径都剔除，只保留文件名
+        # $$表示pid（正在运行当前...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/06/01</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+</div>
+            
+        </div>
+    </article>
     
     <!-- paginator  -->
-    <ul class="post-paginator">
-        <li class="next">
-            
-                <div class="nextSlogan">Next Post</div>
-                <a href="/2018/12/30/alfred/" title="MAC下神器alfred的使用">
-                    <div class="nextTitle">MAC下神器alfred的使用</div>
-                </a>
-            
-        </li>
-        <li class="previous">
-            
-                <div class="prevSlogan">Previous Post</div>
-                <a href="/2018/11/07/understand-linux-shell-command-nohup/" title="理解linux命令 - nohup">
-                    <div class="prevTitle">理解linux命令 - nohup</div>
-                </a>
-            
-        </li>
-    </ul>
-    <!-- 评论插件 -->
-    <!-- 来必力City版安装代码 -->
-
-<!-- City版安装代码已完成 -->
     
-    
-    <!-- partial('_partial/comment/changyan') -->
-    <!--PC版-->
-
-
-    
-    
-    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-    <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
-    <div id="comment"></div>
-    <script>
-    new Valine({
-        el: '#comment' ,
-        notify:false, 
-        verify:false, 
-        appId: "yli83qQtD6rS989d0GX1v7jw-gzGzoHsz",
-        appKey: "LtCXhADf0xgufhrJvA6yU1BB",
-        placeholder: "大家好，我是练习时长两年半的评论框，喜欢🎤、💃🏻、rap、🏀和被评论～",
-        path:window.location.pathname, 
-        avatar:'mm' 
-    });
-    </script>
-
-
-    <!-- 评论 -->
 </main>
             <!-- profile -->
             
@@ -783,24 +528,6 @@ logger.debug(&#39;This is a debug message&#39;)
 </footer>
     </div>
     <!-- toc -->
-    
-    <div class="toc-wrapper" style=
-    
-
-
-
-
-
-
-
-top:50vh;
-
-    >
-        <div class="toc-catalog">
-            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
-        </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么要记录日志"><span class="toc-number">1.</span> <span class="toc-text">为什么要记录日志</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#日志模块"><span class="toc-number">2.</span> <span class="toc-text">日志模块</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基本配置"><span class="toc-number">3.</span> <span class="toc-text">基本配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#格式化输出"><span class="toc-number">4.</span> <span class="toc-text">格式化输出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#记录变量的数据"><span class="toc-number">5.</span> <span class="toc-text">记录变量的数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#记录堆栈信息"><span class="toc-number">6.</span> <span class="toc-text">记录堆栈信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类和函数"><span class="toc-number">7.</span> <span class="toc-text">类和函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用Handlers"><span class="toc-number">8.</span> <span class="toc-text">使用Handlers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他配置方法"><span class="toc-number">9.</span> <span class="toc-text">其他配置方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#认真分析你的日志"><span class="toc-number">10.</span> <span class="toc-text">认真分析你的日志</span></a></li></ol>
-    </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
@@ -1307,8 +1034,6 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
-    
-        <script src="/scripts/share.js" async></script>    
      
     </body>
 </html>
