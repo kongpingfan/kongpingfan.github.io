@@ -379,29 +379,27 @@ height:50vh;
     
     
     <article class="index-post">
-        <a class="abstract-title" href="/2019/06/01/bash-function-return-code-1/">
+        <a class="abstract-title" href="/2019/06/02/bash-return-code/">
             
-                <span>bash编程——函数的return code</span>
+                <span>bash中的return code和exit status</span>
         </a>
         <div class="abstract-content">
-            显示返回：return &lt;RETURN_CODE&gt;
-隐式返回：如果不指定，则默认以函数体最后一行的执行结果作为返回
-返回的code在1-255之间。
-其中0=success。
-可以使用$？来获取函数执行的结果来进行判断。
-例如下面的备份函数（功能：传入要备份的文件路径，将文件备份到/tmp目录下）
-#!/usr/bin/env bash
+            [toc]
+return code当执行完一条命令后，可以使用$?来访问它的执行结果。如果执行成功，则=0，如果执行失败，则为1-255。例如：
+[@bogon:myBlog2]$ man cp
+[@bogon:myBlog2]$ echo &quot;$?&quot;
+0
+[@bogon:myBlog2]$ cat /host/sd
+cat: /host/sd: No such file or directory
+[@bogon:myBlog2]$ echo &quot;$?&quot;
+1
 
-backup_file() {
-    if [[ -f $1 ]] # 检测$1是不是已存在的文件
-    then
-        # basename 将前面的路径都剔除，只保留文件名
-        # $$表示pid（正在运行当前...
+例如下面ping的例子，如果ping通，则返回码为0表示成功，如果ping不通，则返回码为大...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/06/01</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/06/02</span>
             </div>
             <!-- tags  -->
             
@@ -1247,8 +1245,6 @@ logging.debug(&#39;This is a debu...
     
     
     
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 23
@@ -1267,12 +1263,12 @@ logging.debug(&#39;This is a debu...
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/01</span><a class="archive-post-title" href="/2019/06/01/bash-function-return-code/">bash编程——函数的return code</a>
+            <span class="archive-post-date">06/02</span><a class="archive-post-title" href="/2019/06/02/bash-return-code/">bash中的return code和exit status</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">06/01</span><a class="archive-post-title" href="/2019/06/01/bash-function-return-code-1/">bash编程——函数的return code</a>
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href="/2019/06/01/bash-function-return-code/">bash编程——函数的return code</a>
         </li>
     
     
