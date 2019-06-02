@@ -24,7 +24,7 @@
     <meta name="description" content>
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Kongpingfan&#39;s Blog</title>
+    <title>bash脚本debug技巧 · Kongpingfan&#39;s Blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -223,12 +223,23 @@
 </head>
 
     
+        <body class="post-body">
+    
     
 <header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
     <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/">Pingfan&#39;s Blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">bash脚本debug技巧</a>
+            </div>
+    </div>
     
     <a class="home-link" href="/">Pingfan's Blog</a>
 </header>
@@ -240,24 +251,74 @@
 
 
 
+
+height:50vh;
 ">
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            bash脚本debug技巧
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class="post-intro-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">687</span>阅读时长: <span class="post-count reading-time">3 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/06/02</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -358,182 +419,185 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2019/05/27/Gogs-docker-deploy/">
-            
-                <span>Gogs在docker下的部署</span>
-        </a>
-        <div class="abstract-content">
-            下载镜像及启动容器# Pull image from Docker Hub.
-$ docker pull gogs/gogs
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><p>在shebang最后一行加入<code>-x</code>, 这样每执行一行命令都会把执行的语句打印出来。例如：</p>
+<pre><code class="bash">#!/usr/bin/env bash -x
 
-# 创建一个卷用于存储数据
-$ mkdir -p /var/gogs
+backup_file() {
+    if [[ -f $1 ]]  # 1. check if its a file and it does exists
+    then
+        # basename 将前面的路径都剔除，只保留文件名
+        # $$表示pid（正在运行当前脚本的进程id）。在这里使用这个，为了防止同一天多次备份时，前面的备份被覆盖。
+        local BACK=&quot;/tmp/$(basename ${1})-$(date +%F)-$$&quot;
+        echo ${BACK}
+        cp $1 ${BACK}
+    else
+        # The file not exists
+        return 1
+    fi
+}
 
-# 第一次启动
-$ docker run -itd --name=gogs -p 10022:22 -p 10080:3000 -v /var/gogs:/data gogs/gogs
+backup_file /etc/hosts
 
-# 第二种方式，使用docker volume：
-$ docker run --name=gogs -p 10022:22 -p 10080:3000 -v gogs-data:/data gogs/gog...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/05/27</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="docker">docker</a>
-    
-</div>
-            
-        </div>
+if [[ $? -eq 0 ]]
+then
+    echo &quot;Backup succeeded&quot;
+else
+    echo &quot;Backup failed!&quot;
+    exit 1
+fi
+</code></pre>
+<p>执行结果如下：</p>
+<pre><code class="bash">[@bogon:bashlearn (master)]$ ./2.sh 
++ backup_file /etc/hosts
++ [[ -f /etc/hosts ]]
+++ basename /etc/hosts
+++ date +%F
++ local BACK=/tmp/hosts-2019-06-02-35242
++ echo /tmp/hosts-2019-06-02-35242
+/tmp/hosts-2019-06-02-35242
++ cp /etc/hosts /tmp/hosts-2019-06-02-35242
++ [[ 0 -eq 0 ]]
++ echo &#39;Backup succeeded&#39;
+Backup succeeded
+
+</code></pre>
+<hr>
+<p>第二种写法可以使用<code>set -x</code> (set +x 表示停止debugging)</p>
+<p>这样可以在脚本的任何位置控制调试的开启和关闭。</p>
+<pre><code class="bash">#!/usr/bin/env bash
+
+
+backup_file() {
+    if [[ -f $1 ]]  # 1. check if its a file and it does exists
+    then
+        # basename 将前面的路径都剔除，只保留文件名
+        # $$表示pid（正在运行当前脚本的进程id）。在这里使用这个，为了防止同一天多次备份时，前面的备份被覆盖。
+        local BACK=&quot;/tmp/$(basename ${1})-$(date +%F)-$$&quot;
+        echo ${BACK}
+        cp $1 ${BACK}
+    else
+        # The file not exists
+        return 1
+    fi
+}
+
+set -x # 在此处开启调试
+backup_file /etc/hosts
+set +x # 在此处关闭调试，后面部分不会输出调试语句
+
+if [[ $? -eq 0 ]]
+then
+    echo &quot;Backup succeeded&quot;
+else
+    echo &quot;Backup failed!&quot;
+    exit 1
+fi
+</code></pre>
+<h2 id="PS4"><a href="#PS4" class="headerlink" title="PS4"></a>PS4</h2><p>在调试的时候，可以使用<code>PS4</code>，这条命令和<code>-x</code>一起使用。</p>
+<p>上面调试时候每行都输出<code>+</code>，因为PS4的默认值为<code>+</code></p>
+<p>可以设置它的格式，例如：<code>PS4=&#39;+ $BASH_SOURCE : $LINENO : &#39;</code></p>
+<p>这样之前的脚本：</p>
+<pre><code class="bash">#!/usr/bin/env bash
+
+PS4=&#39;+ $BASH_SOURCE : $LINENO : &#39;
+backup_file() {
+...........
+........
+</code></pre>
+<p>输出结果如下：</p>
+<pre><code class="bash">[@bogon:bashlearn (master)]$ ./2.sh 
++ ./2.sh : 19 : backup_file /etc/hosts
++ ./2.sh : 5 : [[ -f /etc/hosts ]]
+++ ./2.sh : 9 : basename /etc/hosts
+++ ./2.sh : 9 : date +%F
++ ./2.sh : 9 : local BACK=/tmp/hosts-2019-06-02-35480
++ ./2.sh : 10 : echo /tmp/hosts-2019-06-02-35480
+/tmp/hosts-2019-06-02-35480
++ ./2.sh : 11 : cp /etc/hosts /tmp/hosts-2019-06-02-35480
++ ./2.sh : 20 : set +x
+Backup succeeded
+</code></pre>
+<p>它把行号都打印出来了，非常利于错误的定位。</p>
+<h2 id="e参数"><a href="#e参数" class="headerlink" title="-e参数"></a>-e参数</h2><p>e = exit</p>
+<p>一旦执行到错误的地方就退出。</p>
+<p>和-x一起使用，可以精确的定位脚本哪一行出的错(因为出错就会退出)</p>
+<pre><code class="bash">#!/bin/bash -ex
+#!/bin/bash -xe
+#!/bin/bash -x -e
+#!/bin/bash -e -x
+</code></pre>
+<p>例如：</p>
+<pre><code class="bash">#!/usr/bin/env bash -ex
+
+FILE_NAME=&quot;/not/here&quot;
+ls ${FILE_NAME}
+echo ${FILE_NAME}
+</code></pre>
+<p>由于文件不存在，执行结果如下：</p>
+<pre><code class="bash">[@bogon:bashlearn (master)]$ ./4.sh 
++ FILE_NAME=/not/here
++ ls /not/here
+ls: /not/here: No such file or directory
+
+</code></pre>
+
     </article>
+    <!-- license  -->
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2019/05/26/bash-programming-case-statement/">
-            
-                <span>linux bash——详解case关键字</span>
-        </a>
-        <div class="abstract-content">
-            通用语法case语句相当于其他语言的switch，如果if对同一个变量要判断很多种情况，可以用case语句来写。
-通用语法如下：
-case &quot;$VAR&quot; in 
-    pattern_1)
-        # Commands go here.
-           ;;
-    pattern_N)
-        # Commands go here.
-        ;;
-esac
-
-
-双分号;;表示终止case语句执行。类似于其他编程语言的break关键字。
-
-例如对于ssh start和ssh stop:
-case &quot;$1&quot; in
-  ...
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://kongpingfan.me">平凡</a>
+            </p><p>原文链接：<a href="https://kongpingfan.me/2019/06/02/bash-debug/">https://kongpingfan.me/2019/06/02/bash-debug/</a>
+            </p><p>发表日期：<a href="https://kongpingfan.me/2019/06/02/bash-debug/">June 2nd 2019, 11:02:19 am</a>
+            </p><p>更新日期：<a href="https://kongpingfan.me/2019/06/02/bash-debug/">June 2nd 2019, 11:02:48 am</a>
+            </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/05/26</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2019/05/26/bash脚本军规/">
-            
-                <span>bash脚本军规</span>
-        </a>
-        <div class="abstract-content">
-            
-脚本以shebang开头。例如：
- #!/bin/bash
-
-
-shebang下面紧跟一行注释，表示脚本的用途，例如：
- # This script creates a backup of every MySQL database on the system. 
-
-
-
-下面紧跟全局变量声明，并赋值：
- DEBUG=true 
- HTML_DIR=/var/www 
-
-函数应该注意使用局部变量，例如：
- local GREETING=&quot;Hello!&quot; 
-
-
-
-所有函数声明放到上半部分，shell主体应该在函数的下面
-
-脚本退出应该有明确的exit status, 例如...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/05/26</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2019/05/09/goland-five-skills/">
-            
-                <span>goland加速开发的五个技巧</span>
-        </a>
-        <div class="abstract-content">
-            struct实现interface在struct名上按Option + Enter，会出现Implement interface，然后出现一个搜索框，在里面输入想实现的interface名，就可以实现该interface。
-
-当然也可以ctrl + I，这样不用进行选择就可以直接输入interface名。
-
-
-livetemplate - forr可以迅速遍历一个map或数组：
-
-填充结构体如果一个函数中需要返回一个结构体，需要对这个结构体中的每个成员都进行赋值，很麻烦。
-可以使用快速填充功能：
-例如getSong中返回Song结构体，在{}之间按Option + Enter，出现Fil...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/05/09</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="golang">golang</a>
-    
-</div>
-            
-        </div>
-    </article>
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2019/06/02/bash-return-code/" title="bash中的return code和exit status">
+                    <div class="prevTitle">bash中的return code和exit status</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
     
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+    <div id="comment"></div>
+    <script>
+    new Valine({
+        el: '#comment' ,
+        notify:false, 
+        verify:false, 
+        appId: "yli83qQtD6rS989d0GX1v7jw-gzGzoHsz",
+        appKey: "LtCXhADf0xgufhrJvA6yU1BB",
+        placeholder: "大家好，我是练习时长两年半的评论框，喜欢🎤、💃🏻、rap、🏀和被评论～",
+        path:window.location.pathname, 
+        avatar:'mm' 
+    });
+    </script>
+
+
+    <!-- 评论 -->
 </main>
             <!-- profile -->
             
@@ -618,6 +682,24 @@ livetemplate - forr可以迅速遍历一个map或数组：
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#调试"><span class="toc-number">1.</span> <span class="toc-text">调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PS4"><span class="toc-number">2.</span> <span class="toc-text">PS4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#e参数"><span class="toc-number">3.</span> <span class="toc-text">-e参数</span></a></li></ol>
+    </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
@@ -1154,6 +1236,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     </body>
 </html>

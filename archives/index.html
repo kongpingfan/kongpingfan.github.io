@@ -366,6 +366,43 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href="/2019/06/02/bash-debug/">
+            
+                <span>bash脚本debug技巧</span>
+        </a>
+        <div class="abstract-content">
+            调试在shebang最后一行加入-x, 这样每执行一行命令都会把执行的语句打印出来。例如：
+#!/usr/bin/env bash -x
+
+backup_file() {
+    if [[ -f $1 ]]  # 1. check if its a file and it does exists
+    then
+        # basename 将前面的路径都剔除，只保留文件名
+        # $$表示pid（正在运行当前脚本的进程id）。在这里使用这个，为了防止同一天多次备份时，前面的备份被覆盖。
+        local BACK=&quot;/tmp/$(basena...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/06/02</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class="abstract-tags">
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags="linux">linux</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href="/2019/06/02/bash-return-code/">
             
                 <span>bash中的return code和exit status</span>
@@ -718,57 +755,6 @@ Alfred分为基本搜索和快速启动的功能，以及工使用自定义插�
             <div class="abstract-tags">
     
         <a class="post-tag" href="javascript:void(0);" data-tags="tools">tools</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2018/11/15/python-logging-module/">
-            
-                <span>python日志记录模块</span>
-        </a>
-        <div class="abstract-content">
-            为什么要记录日志
-它可以让你更好的理解程序的运行流程，甚至帮你发现你在开发时没有考虑到的细节。
-
-持续监控程序的运行，存储用户名、IP等信息。
-
-如果程序出错，在出错之前所有的信息都会被记录下来，效果堪比调试。
-
-可以通过日志数据分析应用的性能，如瓶颈在哪；也可以利用它做市场优化。
-
-
-日志模块python在标准库里提供了日志记录功能。大部分python的三方库都使用了这个模块
-总共有五个级别，从低到高分别为：
-
-DEBUG
-INFO
-WARNING
-ERROR
-CRITICAL
-
-例如：
-import logging
-
-logging.debug(&#39;This is a debu...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/11/15</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="python">python</a>
     
 </div>
             
@@ -1135,9 +1121,30 @@ logging.debug(&#39;This is a debu...
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 23
+        Total : 24
         </div>
         <!-- search  -->
         
@@ -1150,6 +1157,11 @@ logging.debug(&#39;This is a debu...
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span><a class="archive-post-title" href="/2019/06/02/bash-debug/">bash脚本debug技巧</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1282,9 +1294,9 @@ logging.debug(&#39;This is a debu...
     
         <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
     
-        <span class="sidebar-tag-name" data-tags="tools"><span class="iconfont-archer">&#xe606;</span>tools</span>
-    
         <span class="sidebar-tag-name" data-tags="linux"><span class="iconfont-archer">&#xe606;</span>linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="tools"><span class="iconfont-archer">&#xe606;</span>tools</span>
     
         <span class="sidebar-tag-name" data-tags="数据库"><span class="iconfont-archer">&#xe606;</span>数据库</span>
     
