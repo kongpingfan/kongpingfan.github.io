@@ -366,108 +366,31 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href="/2018/09/19/tencent-school-recruitment-testing/">
+        <a class="abstract-title" href="/2020/12/09/aws-ecr-cross-region-replication/">
             
-                <span>某次腾讯校招笔试解析</span>
+                <span>aws-ecr-cross-region-replication</span>
         </a>
         <div class="abstract-content">
-            1 小Q怼序列题目描述小Q有一个长度为n并包含1～n的整数序列。
-在最开始，序列是升序排列，即1在序列首部，n在序列尾部。
-小Q将会对序列进行m次操作，第i次操作，小Q会把xi从序列中取出来并放到序列首部。
-小Q想知道m次操作后，序列变成什么样。
-输入描述
-输入包括m+1行
-第一行包括两个整数n，m(1 &lt;= n, m &lt;= 100000)
-接下来m行，每行一个正整数xi，表示小Q每次操作的数。
+            跨Region复制镜像`之前是ECR缺失的功能，不过可以通过Cloudformation实现(https://github.com/aws-samples/amazon-ecr-cross-region-replication)。
+在reInvent2020中，终于发布了ECR的Cross Region Replication (CRR)新功能，本文将介绍这项新特性。
+CRR有以下优点：
 
-输出描述输出一行，即m次操作之后的序列，以空格分割，行末无空格。
-示例1输入
-
-5 44314
-
-输出
-
-4 1 3 2 5
+可以将镜像复制到其他帐号/区域。由于线上环境在同一区域，减少了拉取镜像时带来的网络延迟，部署上线更快。
+高可用，毕竟同一份镜像分布在几个区域。
 
 
-分析：
-问题可转化为：有一个数组arr[1, 2,...
+使用场景假设有两个团队，开发团队位于欧洲(eu-we...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/09/19</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/12/09</span>
             </div>
             <!-- tags  -->
             
             <div class="abstract-tags">
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="programming">programming</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2018/05/14/the_4th_cstc_writeup/">
-            
-                <span>第四届全国网络空间安全技术大赛 writeup</span>
-        </a>
-        <div class="abstract-content">
-            web2进去后url如下：
-http://117.34.116.192/index.php?file=login.html
-这道题一看url格式，便考虑到PHP文件包含。但是使用php://filter和php://input进行测试的时候，发现“：”被过滤了。于是一套乱摸，倒是摸到了两个敏感文件：
-http://117.34.116.192/index.php?file=../../../../etc/apache2/apache2.conf
-http://117.34.116.192/index.php?file=../../../../etc/passwd
-都能读出来，但没什么用，...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/05/14</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="ctf writeup">ctf writeup</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href="/2018/05/05/ciscn-2018-writeup/">
-            
-                <span>ciscn 2018 第十一届全国大学生信息安全竞赛writeup</span>
-        </a>
-        <div class="abstract-content">
-            前言渣渣队伍，拿了个华中第五。pwn、re和apk一道没做出来……
-Webeasyweb题目链接：http://114.116.26.217/登进去是一个登录界面
-垃圾题目，一开始环境都出错，注册不了，对着题目撸了半个小时无果。后来发了个公告修复了。说出来你可能不信，这道题我是这样做出来的——注册一个普通用户，登录后提示没有管理员权限，看来肯定是要用admin的身份登录了啊。于是我用admin+admin登录，没想到成功了……（过了一会儿使用admin+admin就登不了，提示密码错误），然后匆匆的截了个图：看到没，直接出flag，然而用这个提交死活不对。我想难道是思路不对，看cooki...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/05/05</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class="abstract-tags">
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags="ctf writeup">ctf writeup</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="aws ecr crr reInvent">aws ecr crr reInvent</a>
     
 </div>
             

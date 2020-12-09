@@ -24,7 +24,7 @@
     <meta name="description" content>
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>某次腾讯校招笔试解析 · Kongpingfan&#39;s Blog</title>
+    <title>aws-ecr-cross-region-replication · Kongpingfan&#39;s Blog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -237,7 +237,7 @@
                 <a href="/">Pingfan&#39;s Blog</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">某次腾讯校招笔试解析</a>
+                <a href="#" class="post-name">aws-ecr-cross-region-replication</a>
             </div>
     </div>
     
@@ -267,7 +267,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            某次腾讯校招笔试解析
+            aws-ecr-cross-region-replication
             <!-- 404 -->
             
         </h1>
@@ -286,18 +286,18 @@ height:50vh;
                 
                     <div class="post-intro-tags">
     
-        <a class="post-tag" href="javascript:void(0);" data-tags="programming">programming</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="aws ecr crr reInvent">aws ecr crr reInvent</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">1.8k</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">771</span>阅读时长: <span class="post-count reading-time">3 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2018/09/19</span>
+                    <span class="post-intro-time">2020/12/09</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -421,211 +421,80 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h1 id="1-小Q怼序列"><a href="#1-小Q怼序列" class="headerlink" title="1 小Q怼序列"></a>1 小Q怼序列</h1><h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><p>小Q有一个长度为<code>n</code>并包含<code>1～n</code>的整数序列。</p>
-<p>在最开始，序列是升序排列，即<code>1</code>在序列首部，<code>n</code>在序列尾部。</p>
-<p>小Q将会对序列进行<code>m</code>次操作，第<code>i</code>次操作，小Q会把<code>xi</code>从序列中取出来并放到序列首部。</p>
-<p>小Q想知道<code>m</code>次操作后，序列变成什么样。</p>
-<h3 id="输入描述"><a href="#输入描述" class="headerlink" title="输入描述"></a>输入描述</h3><ul>
-<li>输入包括<code>m+1</code>行</li>
-<li>第一行包括两个整数<code>n，m(1 &lt;= n, m &lt;= 100000)</code></li>
-<li>接下来<code>m</code>行，每行一个正整数<code>xi</code>，表示小Q每次操作的数。</li>
-</ul>
-<h3 id="输出描述"><a href="#输出描述" class="headerlink" title="输出描述"></a>输出描述</h3><p>输出一行，即<code>m</code>次操作之后的序列，以空格分割，行末无空格。</p>
-<h3 id="示例1"><a href="#示例1" class="headerlink" title="示例1"></a>示例1</h3><p>输入</p>
-<blockquote>
-<p>5 4<br>4<br>3<br>1<br>4</p>
-</blockquote>
-<p>输出</p>
-<blockquote>
-<p>4 1 3 2 5</p>
-</blockquote>
-<hr>
-<h3 id="分析："><a href="#分析：" class="headerlink" title="分析："></a>分析：</h3><ul>
-<li><p>问题可转化为：有一个数组<code>arr[1, 2, ……n]</code>和一个操作栈<code>stack[x1, x2 …… xm]</code>，每次从<code>stack</code>中取出一个数xi，把数组中值为<code>xi</code>的数放到最前面。最后输出<code>arr</code>的结果。</p>
-</li>
-<li><p>如果用代码完全模拟上述过程，每次要从<code>arr</code>中找到<code>xi</code>，再将其放到最前面，单次操作时间复杂度为<code>O(n)</code>。共有m次操作，所以时间复杂度为O(m * n)， 考虑到<code>n，m(1 &lt;= n, m &lt;= 100000)</code>，所以这种解法可能会超时。</p>
-</li>
-<li><p>后来想到用哈希表来解，这样时间复杂度降为<code>O(n)</code></p>
-</li>
-</ul>
-<h3 id="代码："><a href="#代码：" class="headerlink" title="代码："></a>代码：</h3><pre><code>&quot;&quot;&quot;输入处理，得到stack数组&quot;&quot;&quot;
-n, m = map(int, input().split())
-stack = []
-for i in range(m):
-    stack.append(int(input()))
-
-&quot;&quot;&quot;使用哈希表来表示arr数组，初始将每个元素置为false，表示该元素未被访问&quot;&quot;&quot;
-visited = [False] * (n + 1)
-
-&quot;&quot;&quot;res是最终返回的序列&quot;&quot;&quot;
-res = []
-for i in stack[::-1]: # 由于stack中最后的操作数反而是在最前面，所以要逆序。
-    &quot;&quot;&quot;如果当前的元素未访问过，就将它放到最前面，并把visited数组相应位置置为True，表示已访问&quot;&quot;&quot;
-    if not visited[i]:
-        res.append(i)
-        visited[i] = True
-
-&quot;&quot;&quot;在visited数组中，如果某数未被访问，将其放到res中，由于是顺序遍历，可以保证其有序性&quot;&quot;&quot;
-for i, v in enumerate(visited):
-    if i != 0 and v == False:
-        res.append(i)
-
-print(&quot; &quot;.join(map(str, res)))
-</code></pre><hr>
-<h1 id="2-小Q怼方格纸"><a href="#2-小Q怼方格纸" class="headerlink" title="2 小Q怼方格纸"></a>2 小Q怼方格纸</h1><h3 id="题目描述-1"><a href="#题目描述-1" class="headerlink" title="题目描述"></a>题目描述</h3><p>小Q有一个<code>W*H</code> 的白色方格纸，小Q还有<code>M</code>毫升的红色颜料，每毫升可以把一个白色方格涂为红色。</p>
-<p>小Q现在需要在方格纸上涂画出一个红色矩形，小Q想知道他能涂画出的最大的矩形面积是多少。</p>
-<h3 id="输入描述-1"><a href="#输入描述-1" class="headerlink" title="输入描述"></a>输入描述</h3><p>输入包括三个正整数<code>W,H,M(1 &lt;= W, H &lt;= 10^6, 1 &lt;= M &lt;= 10^12)</code>，以空格分割。</p>
-<h3 id="输出描述-1"><a href="#输出描述-1" class="headerlink" title="输出描述"></a>输出描述</h3><p>输出一个正整数，表示能涂画出的最大矩形面积。</p>
-<h3 id="示例1-1"><a href="#示例1-1" class="headerlink" title="示例1"></a>示例1</h3><p>输入</p>
-<blockquote>
-<p>4 4  10</p>
-</blockquote>
-<p>输出</p>
-<blockquote>
-<p>9</p>
-</blockquote>
-<hr>
-<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><ul>
-<li>瞄了一眼数据规模：<code>W,H,M(1 &lt;= W, H &lt;= 10^6, 1 &lt;= M &lt;= 10^12)</code>。很明显算法时间复杂度不应过高，最好在<code>O(n)</code>量级上。</li>
-<li>一开始准备使用动态规划，但当时脑子有点糊，没想到从何处下手。后来想到使用贪心算法，时间复杂度可以很好的控制在<code>O(n)</code>。</li>
-<li>暴力枚举宽度<code>W</code>，对于每次枚举的宽度<code>Wi</code>，此时最佳(最贪心)的高度<code>targetH</code>是多少？肯定是<code>M//Wi</code>啦！（<code>//</code>表示取整操作）。但实际高度<code>H</code>一定会满足<code>H &gt; targetH</code>吗？所以要做判断，分两种情况处理，如果满足条件，则此时<code>area = Wi * targetH</code>；如果不满足条件，则<code>area = Wi * h</code>。</li>
-<li>将每次计算的中间结果<code>area</code>保存下来，取最大值即可。</li>
-</ul>
-<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><pre><code>w, h, m = map(int, input().split())
-result = 0
-for i in range(1, w + 1):
-    targetH = m // i  # 理想的高度
-
-    &quot;&quot;&quot;如果理想破灭(targetH超出了实际高度h)，则取h * i; h大于targetH，取 i * targetH&quot;&quot;&quot;
-    if targetH &gt; h:
-        result = max(result, h * i)
-    else:
-        result = max(result, i * targetH)
-print(result)
-</code></pre><hr>
-<h1 id="3-小Q怼士兵"><a href="#3-小Q怼士兵" class="headerlink" title="3 小Q怼士兵"></a>3 小Q怼士兵</h1><h3 id="题目描述-2"><a href="#题目描述-2" class="headerlink" title="题目描述"></a>题目描述</h3><p>小Q将军掌管着<code>n</code>名士兵，第<code>i</code>名士兵有一个战斗力<code>vi</code></p>
-<p>小Q现在要把所有士兵分为三个分队，保证每个士兵都要进入一个分队，每个分队都至少有一名士兵。</p>
-<p>每一只分队的战斗力值等于该分队中所有的士兵的战斗力按位异或(<code>xor</code>)起来。</p>
-<p>小Q将军希望设计一个士兵分配方案使得三支分队的总战斗力之和最大，希望你能帮帮他。</p>
-<h3 id="输入描述-2"><a href="#输入描述-2" class="headerlink" title="输入描述"></a>输入描述</h3><blockquote>
-<p>输入包括两行。<br>输入的第一行包括一个正整数<code>n( 3 &lt;= n &lt;= 50)</code> 表示士兵的人数。</p>
-</blockquote>
-<p>输入的第二行包括<code>n</code>个正整数<code>vi(0 &lt;=vi &lt;=255)</code>,表示每个士兵的战斗力。</p>
-<h3 id="输出描述-2"><a href="#输出描述-2" class="headerlink" title="输出描述"></a>输出描述</h3><p>输出一个正整数，表示三支分队的总战斗力值最大是多少。</p>
-<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>输入</p>
-<blockquote>
-<p>4<br>2 3 5 7</p>
-</blockquote>
-<p>输出<br>17</p>
-<p>说明：</p>
-<blockquote>
-<p>一种有6种分配方案，战斗力之和分别是：<br>3 + 2 + (7 xor 5) = 7<br>5 + 2 + (7 xor 3) = 11<br>……<br>7 + 3 + (5 xor 2) = 17<br>最大战斗力之和为17.</p>
-</blockquote>
-<hr>
-<h3 id="分析-1"><a href="#分析-1" class="headerlink" title="分析"></a>分析</h3><ul>
-<li>看了题目就知道一定要用<code>动态规划</code>（虽然本人动态规划渣的一批，但还是能看出来要用这种思路的）</li>
-<li>随便<code>google</code>了下类似题目，没想到找到了原题（tencent这创新能力也是没谁了）<strong>原题链接：</strong> <a href="http://www.voidcn.com/article/p-xaeubejc-ko.html" target="_blank" rel="noopener">http://www.voidcn.com/article/p-xaeubejc-ko.html</a></li>
-<li>厚着脸皮把别代码copy下来，自己改了下，没想到通过了……</li>
-</ul>
-<pre><code>
-#include &lt;vector&gt;
-#include &lt;algorithm&gt;
-#include &lt;iostream&gt;
-
-
-using namespace std;
-
-#define ll long long
-
-struct node {
-    short a, b, c;
-
-    node(int a = 0, int b = 0, int c = 0) : a(a), b(b), c(c) {
-
-    }
-
-    bool operator&lt;(const node &amp;other) const {
-        if (a != other.a) {
-            return a &lt; other.a;
-        }
-        if (b != other.b) {
-            return b &lt; other.b;
-        }
-        return c &lt; other.c;
-    }
-};
-
-node que[2][256 * 51 * 51];
-
-class TrySail {
-public:
-
-    int get(vector&lt;int&gt; strength) {
-        int cur = 0;
-        int pre = 1;
-        int psz = 1;
-        int csz = 0;
-        que[pre][psz++] = node(0, 0, 0);
-        int len = strength.size();
-
-        for (int i = 0; i &lt; len; i++) {
-            int ss = strength[i];
-            for (int j = 0; j &lt; psz; j++) {
-                que[cur][csz++] = que[pre][j];
-                que[cur][csz++] = que[pre][j];
-                que[cur][csz++] = que[pre][j];
-
-                que[cur][csz - 1].a ^= ss;
-                que[cur][csz - 2].b ^= ss;
-                que[cur][csz - 3].c ^= ss;
-            }
-
-            sort(que[cur], que[cur] + csz);
-
-            int newsz = 1;
-            for (int k = 1; k &lt; csz; k++) {
-                if (que[cur][k - 1] &lt; que[cur][k]) {
-                    que[cur][newsz++] = que[cur][k];
-                }
-            }
-
-            csz = newsz;
-            swap(cur, pre);
-            swap(csz, psz);
-            csz = 0;
-        }
-
-        int ans = 0;
-        for (int i = 0; i &lt; psz; i++) {
-            ans = max(ans, que[pre][i].a + que[pre][i].b + que[pre][i].c);
-        }
-        return ans;
-    }
-};
-
-int main() {
-    int n;
-    int element;
-    cin &gt;&gt; n;
-    vector&lt;int&gt; input;
-    for (int i = 0; i &lt; n; ++i) {
-        cin &gt;&gt; element;
-        input.push_back(element);
-    }
-    TrySail *trySail = new TrySail();
-    cout &lt;&lt; trySail-&gt;get(input);
-    return 0;
-}
-</code></pre><ul>
-<li>一开始报内存不足错误，后来定位到错误是在第29行，<code>node que[2][256 * 256 * 256];</code>。</li>
-</ul>
-<p>把这个值改小，改成<code>node que[2][256 * 51 * 51];</code>后，通过所有测试。</p>
-<p><strong>感想：</strong></p>
+        <p>跨Region复制镜像`之前是ECR缺失的功能，不过可以通过Cloudformation实现(<a href="https://github.com/aws-samples/amazon-ecr-cross-region-replication)。" target="_blank" rel="noopener">https://github.com/aws-samples/amazon-ecr-cross-region-replication)。</a></p>
+<p>在reInvent2020中，终于发布了ECR的<code>Cross Region Replication (CRR)</code>新功能，本文将介绍这项新特性。</p>
+<p>CRR有以下优点：</p>
 <ul>
-<li><p>此次笔试题目前两题难度适中。最后一题有点难度，莫不是在考察<code>面向搜索编程</code>(逃)？</p>
-</li>
-<li><p>动态规划还得再练练啊</p>
-</li>
+<li>可以将镜像复制到其他帐号/区域。由于线上环境在同一区域，减少了拉取镜像时带来的网络延迟，部署上线更快。</li>
+<li>高可用，毕竟同一份镜像分布在几个区域。</li>
+</ul>
+<p><br></p>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><p>假设有两个团队，开发团队位于欧洲(<code>eu-west-1</code>)，运维团队位于美国(<code>us-west-2</code>)。</p>
+<p>开发团队打包完镜像后，需要同步到运维团队所在的region。</p>
+<p>有了CRR后，开发团队只需要通过<code>CodePipeline</code>将镜像上传到<code>eu-west-1</code>区域的仓库，此镜像就会自动同步到<code>us-west-2</code>区域，于是运维团队可以将此镜像部署到EKS/ECS上。</p>
+<p><img src="https://pingfan.s3.amazonaws.com/pic3/vb85g.png" alt="ECR cross region replication use case"></p>
+<p><br></p>
+<h2 id="CRR实践"><a href="#CRR实践" class="headerlink" title="CRR实践"></a>CRR实践</h2><p>我们将实现上面的场景，将上传到<code>eu-west-1</code>的镜像自动同步到<code>us-west-2</code>。</p>
+<p>默认情况下，CRR功能是关闭的，要在<code>eu-west-1</code>的ECR开启<code>CRR</code>：</p>
+<p><img src="https://pingfan.s3.amazonaws.com/pic3/g4n1x.png" alt="image-20201209214816984"></p>
+<p><br></p>
+<p>复制的目标区域是<code>us-west-2</code>:</p>
+<p><img src="https://pingfan.s3.amazonaws.com/pic3/obcvp.png" alt="image-20201209214842321"></p>
+<p><br></p>
+<p>在<code>eu-west-1</code>创建一个仓库(下面全是通过cli创建，也可以通过console创建)：</p>
+<pre><code class="bash">aws ecr create-repository --repository-name crr-test --region eu-west-1
+</code></pre>
+<p>创建完成后，在控制台显示如下：</p>
+<p><img src="https://pingfan.s3.amazonaws.com/pic3/av5s4.png" alt="image-20201209215533851"></p>
+<p>在<code>eu-west-1</code>进行仓库登录授权：</p>
+<pre><code class="bash">aws ecr get-login-password --region eu-west-1 | \
+    docker login --username AWS --password-stdin \
+    123456789012.dkr.ecr.eu-west-1.amazonaws.com
+</code></pre>
+<blockquote>
+<p>将上面的123456789012替换成真实的AWS帐户ID</p>
+</blockquote>
+<p><br></p>
+<p>将镜像上传到源区域 (<code>eu-west-1</code>):</p>
+<pre><code class="bash">docker pull nginx 
+
+docker tag nginx:latest 123456789012.dkr.ecr.eu-west-1.amazonaws.com/crr-test 
+docker push 123456789012.dkr.ecr.us-west-2.amazonaws.com/mservice:42                     
+</code></pre>
+<blockquote>
+<p>将上面的123456789012替换成真实的AWS帐户ID</p>
+</blockquote>
+<p><br></p>
+<hr>
+<p>经过上面的步骤，镜像成功上传到了<code>eu-west-1</code>区域，现在切换到<code>us-west-2</code>区域进行验证：</p>
+<pre><code>aws ecr get-login-password --region us-west-2 | \
+    docker login --username AWS --password-stdin \
+    123456789012.dkr.ecr.us-west-2.amazonaws.com
+
+docker pull 123456789012.dkr.ecr.us-west-2.amazonaws.com/crr-test   
+</code></pre><p>可以查看下载成功的镜像：</p>
+<p><img src="https://pingfan.s3.amazonaws.com/pic3/uy8zv.png" alt="image-20201209221128712"></p>
+<p>在AWS控制台的<code>us-west-2</code>区域，也可以查看：</p>
+<p><img src="https://pingfan.s3.amazonaws.com/pic3/653mr.png" alt="image-20201209220848248"></p>
+<p><br></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>需要注意以下两个细节：</p>
+<ul>
+<li>即使目标区域没有建立仓库，在CRR过程中会自动创建相同名称的仓库。</li>
+<li>如果进行跨帐户复制，目标帐户需要对源帐户进行授权。</li>
+</ul>
+<p><br></p>
+<p>CRR会带来以下额外的费用：</p>
+<ul>
+<li>目标区域(例如上面的us-west-2)的镜像存储费用。</li>
+<li>复制镜像时带来的跨region流量费用。<strong>在复制过程中，流量走的是公网</strong></li>
+</ul>
+<p>可以在<a href="https://aws.amazon.com/ecr/pricing/上查看对应的价格。" target="_blank" rel="noopener">https://aws.amazon.com/ecr/pricing/上查看对应的价格。</a></p>
+<p><br></p>
+<p>目前的CRR功能还是不完善的，将来会发布以下特性：</p>
+<ul>
+<li>查看实时复制进度的API。</li>
+<li>目前开启CRR后会复制所有仓库的镜像，太粗暴了。后面可以让用户选择特定的仓库进行CRR。</li>
+<li>CRR完成后，发送通知事件。</li>
 </ul>
 
     </article>
@@ -633,9 +502,9 @@ int main() {
     
         <div class="license-wrapper">
             <p>原文作者：<a href="https://kongpingfan.com">平凡</a>
-            </p><p>原文链接：<a href="https://kongpingfan.com/2018/09/19/tencent-school-recruitment-testing/">https://kongpingfan.com/2018/09/19/tencent-school-recruitment-testing/</a>
-            </p><p>发表日期：<a href="https://kongpingfan.com/2018/09/19/tencent-school-recruitment-testing/">September 19th 2018, 9:46:26 am</a>
-            </p><p>更新日期：<a href="https://kongpingfan.com/2018/09/19/tencent-school-recruitment-testing/">March 15th 2020, 3:04:34 pm</a>
+            </p><p>原文链接：<a href="https://kongpingfan.com/2020/12/09/aws-ecr-cross-region-replication/">https://kongpingfan.com/2020/12/09/aws-ecr-cross-region-replication/</a>
+            </p><p>发表日期：<a href="https://kongpingfan.com/2020/12/09/aws-ecr-cross-region-replication/">December 9th 2020, 10:58:45 pm</a>
+            </p><p>更新日期：<a href="https://kongpingfan.com/2020/12/09/aws-ecr-cross-region-replication/">December 9th 2020, 10:59:43 pm</a>
             </p><p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -643,17 +512,12 @@ int main() {
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href="/2020/12/09/aws-ecr-cross-region-replication/" title="aws-ecr-cross-region-replication">
-                    <div class="nextTitle">aws-ecr-cross-region-replication</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href="/2018/05/14/the_4th_cstc_writeup/" title="第四届全国网络空间安全技术大赛 writeup">
-                    <div class="prevTitle">第四届全国网络空间安全技术大赛 writeup</div>
+                <a href="/2018/09/19/tencent-school-recruitment-testing/" title="某次腾讯校招笔试解析">
+                    <div class="prevTitle">某次腾讯校招笔试解析</div>
                 </a>
             
         </li>
@@ -788,7 +652,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1-小Q怼序列"><span class="toc-number">1.</span> <span class="toc-text">1 小Q怼序列</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#题目描述"><span class="toc-number">1.0.1.</span> <span class="toc-text">题目描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#输入描述"><span class="toc-number">1.0.2.</span> <span class="toc-text">输入描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#输出描述"><span class="toc-number">1.0.3.</span> <span class="toc-text">输出描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#示例1"><span class="toc-number">1.0.4.</span> <span class="toc-text">示例1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分析："><span class="toc-number">1.0.5.</span> <span class="toc-text">分析：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码："><span class="toc-number">1.0.6.</span> <span class="toc-text">代码：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-小Q怼方格纸"><span class="toc-number">2.</span> <span class="toc-text">2 小Q怼方格纸</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#题目描述-1"><span class="toc-number">2.0.1.</span> <span class="toc-text">题目描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#输入描述-1"><span class="toc-number">2.0.2.</span> <span class="toc-text">输入描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#输出描述-1"><span class="toc-number">2.0.3.</span> <span class="toc-text">输出描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#示例1-1"><span class="toc-number">2.0.4.</span> <span class="toc-text">示例1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分析"><span class="toc-number">2.0.5.</span> <span class="toc-text">分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代码"><span class="toc-number">2.0.6.</span> <span class="toc-text">代码</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-小Q怼士兵"><span class="toc-number">3.</span> <span class="toc-text">3 小Q怼士兵</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#题目描述-2"><span class="toc-number">3.0.1.</span> <span class="toc-text">题目描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#输入描述-2"><span class="toc-number">3.0.2.</span> <span class="toc-text">输入描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#输出描述-2"><span class="toc-number">3.0.3.</span> <span class="toc-text">输出描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#示例"><span class="toc-number">3.0.4.</span> <span class="toc-text">示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分析-1"><span class="toc-number">3.0.5.</span> <span class="toc-text">分析</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用场景"><span class="toc-number">1.</span> <span class="toc-text">使用场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CRR实践"><span class="toc-number">2.</span> <span class="toc-text">CRR实践</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
